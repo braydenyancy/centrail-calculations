@@ -32,3 +32,18 @@ Hosted platform results are recorded by [CI](https://github.com/braydenyancy/cen
 and [CodeQL](https://github.com/braydenyancy/centrail-calculations/actions/workflows/codeql.yml).
 Use the run for the exact commit being reviewed. The local checks above do not
 substitute for the native Windows/macOS jobs or prove owner-only settings are enabled.
+
+## Document-parser security follow-up
+
+The first hosted CodeQL analysis identified potential polynomial backtracking in
+the method frontmatter parser. Literal delimiter searches replace that expression;
+13 added regressions bring the suite to 159 passing tests. All ten retained
+proposal files still regenerate byte-for-byte, and packed consumers pass.
+
+An independent comparison over 33,102 retained/generated cases found the same
+accepted metadata and body bytes and the same rejected inputs. A bounded local
+probe rejected a 7 MB malformed document in approximately 22 ms. That observation
+supports the structural removal of backtracking; it is not a general latency SLA.
+The initial package receipt above remains historical because the parser repair
+changes the package's code bytes. Hosted analysis and alert state must be checked
+for the exact follow-up commit.

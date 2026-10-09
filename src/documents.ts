@@ -106,9 +106,17 @@ export type MethodMetadata = {
 };
 
 export function readMethodDocument(text: string): { metadata: MethodMetadata; body: string } {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]+)$/.exec(text);
-  if (!match) throw new Error("Method requires frontmatter and a Markdown explanation");
-  const raw = parseJsonStrict(match[1]);
+  const openingLength = text.startsWith("---\r\n") ? 5 : text.startsWith("---\n") ? 4 : 0;
+  if (!openingLength) throw new Error("Method requires frontmatter and a Markdown explanation");
+  // Two literal scans avoid backtracking on repeated Markdown delimiters.
+  const lf = text.indexOf("\n---\n", openingLength);
+  const crlf = text.indexOf("\n---\r\n", openingLength);
+  const closing = lf < 0 ? crlf : crlf < 0 ? lf : Math.min(lf, crlf);
+  if (closing < 0) throw new Error("Method requires frontmatter and a Markdown explanation");
+  const bodyStart = closing + (text[closing + 4] === "\r" ? 6 : 5);
+  if (bodyStart === text.length) throw new Error("Method requires frontmatter and a Markdown explanation");
+  const metadataEnd = text[closing - 1] === "\r" ? closing - 1 : closing;
+  const raw = parseJsonStrict(text.slice(openingLength, metadataEnd));
   if (raw === null || Array.isArray(raw) || typeof raw !== "object") throw new Error("Invalid method metadata");
   const m = raw as Record<string, unknown>;
   const keys = ["schemaVersion", "id", "revision", "title", "kind", "inputUnit", "outputUnit", "assumptions", "exclusions"];
@@ -122,6 +130,7 @@ export function readMethodDocument(text: string): { metadata: MethodMetadata; bo
       throw new Error(`Method requires ${k} as text list`);
     }
   }
-  if (!match[2].trim()) throw new Error("Method explanation is empty");
-  return { metadata: m as MethodMetadata, body: match[2] };
+  const body = text.slice(bodyStart);
+  if (!body.trim()) throw new Error("Method explanation is empty");
+  return { metadata: m as MethodMetadata, body };
 }

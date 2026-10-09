@@ -27,7 +27,7 @@ not configure them. Review their actual state before enabling publication.
    self-review and disable administrator bypass where supported. Restrict its
    deployment tags to `v*` and verify the restriction excludes ordinary branches.
 4. Protect `main` with pull-request review and the stable `CI passed` check.
-   Configure the actual security check names after their first successful runs;
+   Enable native CodeQL merge protection for high/critical and error-level findings;
    see [repository settings](repository-settings.md). Protect release tags against
    unauthorized creation, updates and deletion.
 5. Review package contents, third-party notices, the security support policy and

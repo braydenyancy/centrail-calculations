@@ -14,3 +14,5 @@ here. Package versions and calculation identities are separate; see
   compatibility fixtures with methodology documentation.
 - Add isolated package checks, offline artifact regeneration, portable CI and
   contribution guidance. No package release or production adoption is implied.
+- Replace backtracking in method frontmatter parsing with literal delimiter
+  searches; preserve accepted document bytes and reject malformed large inputs.

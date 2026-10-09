@@ -12,25 +12,32 @@ apply the checked-in configuration from a checkout with GitHub CLI:
 
 ```sh
 gh api --method PATCH repos/braydenyancy/centrail-calculations --input .github/repository-settings/repository.json
-gh api --method PUT repos/braydenyancy/centrail-calculations/branches/main/protection --input .github/repository-settings/branch-protection.json
+gh api --method POST repos/braydenyancy/centrail-calculations/rulesets --input .github/repository-settings/main-ruleset.json
 ```
 
-The protection requires current checks, one approving code-owner review, review
+The ruleset requires current checks, one approving code-owner review, review
 of the latest push by another person and resolved conversations. It dismisses
-stale approvals, prevents force pushes/deletion and applies to administrators too.
+stale approvals and prevents force pushes/deletion, with no administrator bypass.
 Both named maintainers in [CODEOWNERS](../.github/CODEOWNERS) must retain write
 access for ownership matching. Squash merges produce the required linear history.
 
 `CI passed` is a stable aggregate: every Node.js 22/24 job on Ubuntu, macOS and
-Windows must pass. Both CodeQL jobs are also required. `Dependency review` runs
+Windows must pass. A separate native code-scanning rule requires CodeQL results
+and blocks introduced high/critical security findings and error-level findings.
+A green CodeQL workflow only proves analysis completed; it does not prove there
+are no findings. This rule covers pull-request-introduced alert locations, not a
+blanket guarantee that every historical alert is closed. `Dependency review` runs
 on pull requests; add it to required contexts after its first successful run
 confirms the name and repository support. Do not enable a required check that
 cannot run for an incoming pull request.
 
-Verify the actual setting rather than treating an API exit code as the receipt:
+Create the ruleset once. To change an existing ruleset, use its ID with
+`PUT /repos/braydenyancy/centrail-calculations/rulesets/{ruleset_id}` and the same
+desired-state file; do not create duplicate rulesets. Inspect actual state:
 
 ```sh
-gh api repos/braydenyancy/centrail-calculations/branches/main/protection
+gh api repos/braydenyancy/centrail-calculations/rulesets
+gh api repos/braydenyancy/centrail-calculations/rules/branches/main
 ```
 
 ## Security and automation
@@ -63,4 +70,4 @@ repository setup alone does not publish or reserve the npm package name.
 
 Repository settings should be rechecked after ownership transfers or permission
 changes. GitHub [documents personal-account access](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository)
-and [branch protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+and [code-scanning merge protection](https://docs.github.com/en/code-security/concepts/code-scanning/merge-protection).
