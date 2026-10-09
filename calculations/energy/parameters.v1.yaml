@@ -1,0 +1,430 @@
+{
+  "schemaVersion": 1,
+  "methodId": "token-energy",
+  "methodRevision": "token-energy-v2",
+  "unit": "kWh",
+  "rangeMeaning": "scenario-bounds",
+  "effectiveFrom": null,
+  "provenance": {
+    "path": "src/lib/usage/footprint-sources.ts",
+    "sha256": "81eb4bec1b952effef2c6c3e689cd63e161b10f8a10e4682aefbe852a0620624",
+    "note": "Snapshot of local calculation parameters on 2026-10-08; citations preserved as existing assumptions, not newly verified provider measurements."
+  },
+  "coefficients": {
+    "input": {
+      "value": 0.39,
+      "low": 0.2,
+      "high": 0.39,
+      "source": {
+        "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+        "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+        "note": "Per-token-class energy back-solved from Epoch AI's GPT-4o estimates, in three context cases: typical short (input ~110 / output ~540 Wh/MTok), medium context ~10k tokens (~200 / ~990), maximum context ~100k tokens (~390 / ~1,950). Couch used the ~100k case for coding agents, which run long contexts; it is the central here and the ~10k case the low end. The short-query case is not used: it does not describe a coding-agent session, which sends ~20k tokens of system prompt and tools before the first message. Couch calls it napkin math."
+      },
+      "rangeSource": {
+        "label": "Epoch AI, How much energy does ChatGPT use? (Feb 2025)",
+        "url": "https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use",
+        "note": "GPT-4o: ~0.3 Wh per typical query, ~2.5 Wh with a 10k-token input, ~40 Wh with 100k. The basis of Couch's rates."
+      }
+    },
+    "output": {
+      "value": 1.95,
+      "low": 0.99,
+      "high": 1.95,
+      "source": {
+        "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+        "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+        "note": "Per-token-class energy back-solved from Epoch AI's GPT-4o estimates, in three context cases: typical short (input ~110 / output ~540 Wh/MTok), medium context ~10k tokens (~200 / ~990), maximum context ~100k tokens (~390 / ~1,950). Couch used the ~100k case for coding agents, which run long contexts; it is the central here and the ~10k case the low end. The short-query case is not used: it does not describe a coding-agent session, which sends ~20k tokens of system prompt and tools before the first message. Couch calls it napkin math."
+      },
+      "rangeSource": {
+        "label": "Epoch AI, How much energy does ChatGPT use? (Feb 2025)",
+        "url": "https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use",
+        "note": "GPT-4o: ~0.3 Wh per typical query, ~2.5 Wh with a 10k-token input, ~40 Wh with 100k. The basis of Couch's rates."
+      }
+    },
+    "cacheRead": {
+      "value": 0.039,
+      "low": 0.02,
+      "high": 0.039,
+      "source": {
+        "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+        "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+        "note": "Cache rates are Anthropic's price ratios applied to the input rate, as Couch derived them: cache reads at 1/10 of input, cache writes at 1.25x input. A price ratio, not an energy measurement."
+      }
+    },
+    "cacheWrite": {
+      "value": 0.49,
+      "low": 0.25,
+      "high": 0.49,
+      "source": {
+        "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+        "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+        "note": "Cache rates are Anthropic's price ratios applied to the input rate, as Couch derived them: cache reads at 1/10 of input, cache writes at 1.25x input. A price ratio, not an energy measurement."
+      }
+    }
+  },
+  "modelFactors": [
+    {
+      "match": {
+        "kind": "regex",
+        "value": "claude-3-opus|opus-4(?:[-.][01])?(?:$|[-@](?:\\d{8}|v\\d)|:)"
+      },
+      "factor": {
+        "value": 3,
+        "low": 3,
+        "high": 5,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "opus-5[-.]5(?!\\d)"
+      },
+      "factor": {
+        "value": 0.8,
+        "low": 0.8,
+        "high": 1.33,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "opus"
+      },
+      "factor": {
+        "value": 1,
+        "low": 1,
+        "high": 1.67,
+        "basis": "anchor",
+        "source": {
+          "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+          "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+          "note": "The rates describe GPT-4o (Epoch AI's estimate), which Couch takes as a ballpark for Claude Opus 4.5: both list at $5/MTok input, GPT-4o at $15 output at launch and Opus 4.5 at $25."
+        },
+        "rangeSource": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "fable"
+      },
+      "factor": {
+        "value": 2,
+        "low": 2,
+        "high": 3.33,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "mythos"
+      },
+      "factor": {
+        "value": 2,
+        "low": 2,
+        "high": 3.33,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "sonnet-5"
+      },
+      "factor": {
+        "value": 0.4,
+        "low": 0.4,
+        "high": 0.67,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "sonnet"
+      },
+      "factor": {
+        "value": 0.6,
+        "low": 0.6,
+        "high": 1,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "claude-3-haiku"
+      },
+      "factor": {
+        "value": 0.05,
+        "low": 0.05,
+        "high": 0.0833,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "claude-3[-.]5-haiku|claude-haiku-3[-.]5"
+      },
+      "factor": {
+        "value": 0.16,
+        "low": 0.16,
+        "high": 0.267,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "haiku"
+      },
+      "factor": {
+        "value": 0.2,
+        "low": 0.2,
+        "high": 0.33,
+        "basis": "price",
+        "source": {
+          "label": "Anthropic API pricing",
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "gpt-4o-mini"
+      },
+      "factor": {
+        "value": 0.04,
+        "low": 0.04,
+        "high": 0.04,
+        "basis": "price",
+        "source": {
+          "label": "OpenAI API pricing",
+          "url": "https://openai.com/api/pricing",
+          "note": "Output list price per MTok, against GPT-4o's $15 at launch: GPT-5.x flagships $14-30, GPT-5.x pro $180, GPT-5.6 Luna $6, GPT-5 / 5.4 mini $2 / $4.50, GPT-5 / 5.4 nano $0.40 / $1.25, GPT-4o mini $0.60."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "gpt-4o"
+      },
+      "factor": {
+        "value": 1,
+        "low": 1,
+        "high": 1,
+        "basis": "anchor",
+        "source": {
+          "label": "Epoch AI, How much energy does ChatGPT use? (Feb 2025)",
+          "url": "https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use",
+          "note": "GPT-4o: ~0.3 Wh per typical query, ~2.5 Wh with a 10k-token input, ~40 Wh with 100k. The basis of Couch's rates."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "gpt-5(?:\\.\\d+)?-nano"
+      },
+      "factor": {
+        "value": 0.0267,
+        "low": 0.0267,
+        "high": 0.0833,
+        "basis": "price",
+        "source": {
+          "label": "OpenAI API pricing",
+          "url": "https://openai.com/api/pricing",
+          "note": "Output list price per MTok, against GPT-4o's $15 at launch: GPT-5.x flagships $14-30, GPT-5.x pro $180, GPT-5.6 Luna $6, GPT-5 / 5.4 mini $2 / $4.50, GPT-5 / 5.4 nano $0.40 / $1.25, GPT-4o mini $0.60."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "gpt-5(?:\\.\\d+)?-mini"
+      },
+      "factor": {
+        "value": 0.133,
+        "low": 0.133,
+        "high": 0.3,
+        "basis": "price",
+        "source": {
+          "label": "OpenAI API pricing",
+          "url": "https://openai.com/api/pricing",
+          "note": "Output list price per MTok, against GPT-4o's $15 at launch: GPT-5.x flagships $14-30, GPT-5.x pro $180, GPT-5.6 Luna $6, GPT-5 / 5.4 mini $2 / $4.50, GPT-5 / 5.4 nano $0.40 / $1.25, GPT-4o mini $0.60."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "gpt-5(?:\\.\\d+)?-luna"
+      },
+      "factor": {
+        "value": 0.4,
+        "low": 0.4,
+        "high": 0.4,
+        "basis": "price",
+        "source": {
+          "label": "OpenAI API pricing",
+          "url": "https://openai.com/api/pricing",
+          "note": "Output list price per MTok, against GPT-4o's $15 at launch: GPT-5.x flagships $14-30, GPT-5.x pro $180, GPT-5.6 Luna $6, GPT-5 / 5.4 mini $2 / $4.50, GPT-5 / 5.4 nano $0.40 / $1.25, GPT-4o mini $0.60."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "regex",
+        "value": "gpt-5(?:\\.\\d+)?-pro"
+      },
+      "factor": {
+        "value": 12,
+        "low": 12,
+        "high": 12,
+        "basis": "price",
+        "source": {
+          "label": "OpenAI API pricing",
+          "url": "https://openai.com/api/pricing",
+          "note": "Output list price per MTok, against GPT-4o's $15 at launch: GPT-5.x flagships $14-30, GPT-5.x pro $180, GPT-5.6 Luna $6, GPT-5 / 5.4 mini $2 / $4.50, GPT-5 / 5.4 nano $0.40 / $1.25, GPT-4o mini $0.60."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "gpt-5"
+      },
+      "factor": {
+        "value": 1,
+        "low": 1,
+        "high": 2,
+        "basis": "price",
+        "source": {
+          "label": "OpenAI API pricing",
+          "url": "https://openai.com/api/pricing",
+          "note": "Output list price per MTok, against GPT-4o's $15 at launch: GPT-5.x flagships $14-30, GPT-5.x pro $180, GPT-5.6 Luna $6, GPT-5 / 5.4 mini $2 / $4.50, GPT-5 / 5.4 nano $0.40 / $1.25, GPT-4o mini $0.60."
+        }
+      }
+    },
+    {
+      "match": {
+        "kind": "substring",
+        "value": "deepseek"
+      },
+      "factor": {
+        "value": 1,
+        "low": 1,
+        "high": 5.7,
+        "basis": "default",
+        "source": {
+          "label": "Jegham et al., How Hungry is AI? (arXiv 2505.09598v6, Nov 2025)",
+          "url": "https://arxiv.org/abs/2505.09598v6",
+          "note": "Table 4: DeepSeek-R1 used 24.596 Wh per medium query on DeepSeek's own servers and 4.331 Wh on Azure (5.7x), the same model and tokens on different infrastructure. Per-query figures include reasoning tokens, so they are not per-token factors."
+        }
+      }
+    }
+  ],
+  "defaultModelFactor": {
+    "value": 1,
+    "low": 0.2,
+    "high": 1.67,
+    "basis": "default",
+    "source": {
+      "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+      "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+      "note": "Unknown model: the anchor's 1.0x, spanning Haiku-class (0.2x) to Opus-class read at GPT-4o's price (1.67x)."
+    },
+    "rangeSource": {
+      "label": "Anthropic API pricing",
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "note": "Output list price per MTok (Oct 2026): Opus 4.5 to 5 $25, Opus 5.5 $20, Opus 4 / 4.1 $75, Fable and Mythos 5 / 5.1 $50, Sonnet 4.x $15, Sonnet 5 / 5.5 $10, Haiku 4.5 $5, Haiku 3.5 $4, Haiku 3 $1.25. Price as a stand-in for compute, Couch's own proxy."
+    }
+  },
+  "blendedRates": {
+    "chat": {
+      "value": 0.28,
+      "low": 0.14,
+      "high": 0.28,
+      "source": {
+        "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+        "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+        "note": "Blended illustrative rate: history-heavy chat mix (70% cached context)."
+      }
+    },
+    "coding": {
+      "value": 0.073,
+      "low": 0.037,
+      "high": 0.073,
+      "source": {
+        "label": "Couch, Electricity use of AI coding agents (Jan 2026)",
+        "url": "https://simonpcouch.com/blog/2026-01-20-cc-impact/",
+        "note": "Blended illustrative rate: cache-dominated coding-agent mix (~94% cache reads)."
+      }
+    }
+  },
+  "usageMixes": {
+    "chat": {
+      "cacheRead": 0.7,
+      "input": 0.12,
+      "cacheWrite": 0.1,
+      "output": 0.08
+    },
+    "coding": {
+      "cacheRead": 0.94,
+      "cacheWrite": 0.05,
+      "output": 0.006,
+      "input": 0.001
+    }
+  }
+}

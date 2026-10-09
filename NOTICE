@@ -1,0 +1,14 @@
+Centrail Calculations
+Copyright 2026 Centrail contributors
+
+Original source code and documentation are licensed under Apache-2.0.
+
+The retained LiteLLM catalog and its derived pricing proposal originate from
+BerriAI/litellm, commit d174c43518a479fe584703eb7829d4a022f0f955.
+They retain their MIT license and attribution:
+calculations/pricing/proposal-2026-10-08/SOURCE-LICENSE.txt
+
+References in method documents and parameter records identify evidence sources;
+they do not relicense the referenced publications or imply their endorsement.
+The retained energy parameters describe assumptions and estimates, not provider
+measurements. See calculations/energy/METHOD.md and docs/methodology.md.

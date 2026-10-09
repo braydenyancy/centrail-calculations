@@ -1,0 +1,35 @@
+name: Methodology or evidence proposal
+description: Challenge an assumption or propose a source, parameter, formula or coverage change.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A specific counterexample or clearer evidence is welcome. Read docs/methodology.md and retain disagreements instead of silently choosing a source.
+  - type: textarea
+    id: claim
+    attributes:
+      label: Claim and affected scope
+      description: What should change, for which inputs, and why? Include units and relevant billing or environmental boundaries.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Source evidence and redistribution terms
+      description: Link primary evidence where available. Include source revision, retrieval/effective dates and license or terms; mark unknowns explicitly.
+    validations:
+      required: true
+  - type: textarea
+    id: difference
+    attributes:
+      label: Before/after example and uncertainty
+      description: Use synthetic inputs. Explain numerical or coverage differences, conflicting sources and limitations. A formula is optional for an early proposal.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Replay and compatibility implications
+      description: Which method, parameter or schema identity changes? Explain what would stay replayable, or note what needs investigation.
+    validations:
+      required: true

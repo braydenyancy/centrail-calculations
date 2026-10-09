@@ -1,0 +1,75 @@
+{
+  "name": "@centrail/calculations",
+  "version": "0.1.0",
+  "description": "Deterministic, versioned AI usage pricing and environmental estimates with reviewable methodology.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "NOTICE"
+  ],
+  "exports": {
+    "./documents": {
+      "types": "./dist/documents.d.ts",
+      "import": "./dist/documents.js"
+    },
+    "./pricing": {
+      "types": "./dist/pricing.d.ts",
+      "import": "./dist/pricing.js"
+    },
+    "./energy": {
+      "types": "./dist/energy.d.ts",
+      "import": "./dist/energy.js"
+    },
+    "./workflow": {
+      "types": "./dist/workflow.d.ts",
+      "import": "./dist/workflow.js"
+    },
+    "./catalog-observations": {
+      "types": "./dist/catalog-observations.d.ts",
+      "import": "./dist/catalog-observations.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/braydenyancy/centrail-calculations.git"
+  },
+  "homepage": "https://github.com/braydenyancy/centrail-calculations#readme",
+  "bugs": {
+    "url": "https://github.com/braydenyancy/centrail-calculations/issues"
+  },
+  "keywords": [
+    "ai",
+    "tokens",
+    "pricing",
+    "energy",
+    "methodology",
+    "reproducibility"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:package": "npm run build && node scripts/test-package.mjs",
+    "test:artifacts": "node scripts/test-artifacts.mjs",
+    "check": "npm run typecheck && npm test && npm run test:docs && npm run test:artifacts && npm run test:package",
+    "calculations": "node --import tsx scripts/calculations.ts",
+    "observe-catalog": "node --import tsx scripts/observe-catalog.ts",
+    "prepack": "npm run build",
+    "test:docs": "node scripts/check-docs.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "description": "Synthetic boundary inputs captured from Centrail footprint method v2. These fixed outputs preserve floating-point behavior and sanitization, not measured energy.",
+  "capturedFrom": {
+    "revision": "65b5f94",
+    "implementation": "src/lib/usage/footprint.ts",
+    "methodVersion": 2
+  },
+  "inputEncoding": "Each name is decoded with Number(name). tokens applies the value to all four token buckets; total applies it as the total-token input. Both use the default model factor and total uses chat mix.",
+  "orderedMatches": [
+    "claude-3-opus|opus-4(?:[-.][01])?(?:$|[-@](?:\\d{8}|v\\d)|:)",
+    "opus-5[-.]5(?!\\d)",
+    "opus",
+    "fable",
+    "mythos",
+    "sonnet-5",
+    "sonnet",
+    "claude-3-haiku",
+    "claude-3[-.]5-haiku|claude-haiku-3[-.]5",
+    "haiku",
+    "gpt-4o-mini",
+    "gpt-4o",
+    "gpt-5(?:\\.\\d+)?-nano",
+    "gpt-5(?:\\.\\d+)?-mini",
+    "gpt-5(?:\\.\\d+)?-luna",
+    "gpt-5(?:\\.\\d+)?-pro",
+    "gpt-5",
+    "deepseek"
+  ],
+  "cases": [
+    {
+      "name": "0",
+      "tokens": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      },
+      "total": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "-100",
+      "tokens": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      },
+      "total": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Infinity",
+      "tokens": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      },
+      "total": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "-Infinity",
+      "tokens": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      },
+      "total": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "NaN",
+      "tokens": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      },
+      "total": {
+        "low": 0,
+        "value": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "0.5",
+      "tokens": {
+        "low": 1.4599999999999998e-7,
+        "value": 0.0000014345,
+        "high": 0.0000023956149999999998
+      },
+      "total": {
+        "low": 1.4000000000000001e-8,
+        "value": 1.4e-7,
+        "high": 2.3380000000000002e-7
+      }
+    },
+    {
+      "name": "1",
+      "tokens": {
+        "low": 2.9199999999999997e-7,
+        "value": 0.000002869,
+        "high": 0.0000047912299999999995
+      },
+      "total": {
+        "low": 2.8000000000000003e-8,
+        "value": 2.8e-7,
+        "high": 4.6760000000000003e-7
+      }
+    },
+    {
+      "name": "9007199254740991",
+      "tokens": {
+        "low": 2630102182.3843694,
+        "value": 25841654661.851906,
+        "high": 43155563285.29268
+      },
+      "total": {
+        "low": 252201579.1327478,
+        "value": 2522015791.327478,
+        "high": 4211766371.516888
+      }
+    }
+  ]
+}

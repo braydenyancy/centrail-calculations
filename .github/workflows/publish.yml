@@ -1,0 +1,105 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  package:
+    name: Prepare tested package
+    needs: verify
+    if: github.repository == 'braydenyancy/centrail-calculations' && vars.NPM_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      dist-tag: ${{ steps.version.outputs.dist-tag }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Require a reviewed commit on main
+        run: git merge-base --is-ancestor HEAD origin/main
+      - name: Require the release tag to match the package version
+        id: version
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs';
+          const { name, version } = JSON.parse(readFileSync('package.json', 'utf8'));
+          if (name !== '@centrail/calculations' || process.env.GITHUB_REF_NAME !== `v${version}`) {
+            throw new Error('The release tag must match @centrail/calculations package.json version');
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `dist-tag=${version.includes('-') ? 'next' : 'latest'}\n`);
+          NODE
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - name: Retain the exact tarball tested by isolated consumers
+        run: npm run test:package -- --out artifacts
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: npm-package
+          path: |
+            artifacts/*.tgz
+            artifacts/pack-report.json
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish tested package
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: npm-package
+          path: artifacts
+      - name: Verify the tested tarball and an OIDC-capable npm version
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, readdirSync } from 'node:fs';
+          import { createHash } from 'node:crypto';
+          import { execFileSync } from 'node:child_process';
+          const tarballs = readdirSync('artifacts').filter(name => name.endsWith('.tgz'));
+          if (tarballs.length !== 1) {
+            throw new Error('Expected exactly one tested package tarball');
+          }
+          const report = JSON.parse(readFileSync('artifacts/pack-report.json', 'utf8'));
+          const sha256 = createHash('sha256').update(readFileSync(`artifacts/${tarballs[0]}`)).digest('hex');
+          if (report.name !== '@centrail/calculations' || report.filename !== tarballs[0]
+              || process.env.GITHUB_REF_NAME !== `v${report.version}` || report.sha256 !== sha256) {
+            throw new Error('The package tarball must match its tested release receipt');
+          }
+          const [major, minor, patch] = execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim().split('.').map(Number);
+          if (![major, minor, patch].every(Number.isSafeInteger)
+              || major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1)))) {
+            throw new Error('npm >=11.5.1 is required for trusted publishing');
+          }
+          NODE
+      - name: Publish with npm trusted publishing
+        env:
+          NPM_DIST_TAG: ${{ needs.package.outputs.dist-tag }}
+        run: npm publish artifacts/*.tgz --access public --provenance --ignore-scripts --tag "$NPM_DIST_TAG"

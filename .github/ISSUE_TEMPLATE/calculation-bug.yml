@@ -1,0 +1,35 @@
+name: Calculation or package bug
+description: Report a reproducible numerical, coverage, parsing or integration defect.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use synthetic or redistributable inputs. Do not post credentials, private transcripts or account data. For sensitive security findings, follow SECURITY.md.
+  - type: input
+    id: version
+    attributes:
+      label: Package version or commit
+      description: Include Node.js version and operating system for installation or runtime failures.
+    validations:
+      required: true
+  - type: textarea
+    id: identity
+    attributes:
+      label: Method and parameter identity
+      description: Provide method ID/revision, parameter hash and source pin when relevant. Use "not applicable" for packaging bugs.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include normalized synthetic inputs and the command or code that produces the result.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+      description: Include units, coverage, assumptions and evidence for the expectation, not only a total.
+    validations:
+      required: true
