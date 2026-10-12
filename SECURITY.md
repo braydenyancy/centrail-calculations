@@ -17,10 +17,12 @@ or methodology issue form.
 
 ## Supported versions
 
-This project is in pre-release development and has no published npm version yet.
-Security fixes target the current development branch; there is no maintained
-release support matrix or promised backport schedule at this stage. Before the
-first package release, review this policy with the release documentation.
+The latest stable release is `0.1.0`, published on October 11, 2026. Report
+vulnerabilities affecting that release through the channel above. Security fixes
+target the current development branch and are delivered in a new version;
+published package contents are not replaced. There is no promised backport
+schedule for older patch versions or prereleases, including the bootstrap
+`0.0.0-stage` version.
 
 ## Trust boundaries
 

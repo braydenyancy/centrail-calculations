@@ -8,10 +8,21 @@ provides ESM modules and type declarations, with no runtime dependencies. Caller
 choose the exact method and parameter artifact; the library does not fetch rates,
 select a current catalog or collect usage data.
 
-**Status:** initial, pre-release implementation; the npm package has not been
-published. Retained pricing data is a proposal for review, not an accepted current
+**Status:** [`@centrail/calculations@0.1.0`](https://www.npmjs.com/package/@centrail/calculations/v/0.1.0)
+is published. Its bytes match the verified source build; see the
+[publication receipt](docs/verification/npm-0.1.0.md) for checks and provenance
+limitations. Retained pricing data is a proposal for review, not an accepted current
 catalog. Extracting this package does not establish adoption by a production CLI
 or server. Energy estimates preserve a historical method and its limitations.
+
+## Install
+
+```sh
+npm install --save-exact @centrail/calculations@0.1.0
+```
+
+Use Node.js 22.12 or later. Import one of the modules listed below; there is no
+root export. Supply an explicit reviewed parameter artifact.
 
 ## Try it locally
 
@@ -35,7 +46,7 @@ tests an installed package in an isolated consumer. CI runs the checks on Linux,
 macOS and Windows with Node.js 22 and 24. Check the workflow results for a
 particular revision before relying on it.
 
-To try the unpublished package in another local project, run `npm pack` here and
+To try a local development build in another project, run `npm pack` here and
 install the resulting `.tgz` there with `npm install /path/to/package.tgz`.
 The package contains the runtime and declarations; source evidence and parameter
 artifacts stay in this repository. Retain the exact artifact used by your project.

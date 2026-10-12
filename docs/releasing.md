@@ -1,15 +1,24 @@
 # Releasing the package
 
-Repository setup is not an npm release. The initial `0.1.0` package is unpublished;
-the publish job stays disabled until the repository variable
-`NPM_PUBLISH_ENABLED` is explicitly set to `true`.
+The initial `0.1.0` package is published on npm. Its exact contents were verified
+against source commit `94b9dbf`; the [publication receipt](verification/npm-0.1.0.md)
+records the checks and the absence of a GitHub release tag, Publish workflow run
+and npm provenance attestation. Do not republish that version or describe it as
+having CI provenance. A later release must use a new reviewed version.
+
+The repository variable `NPM_PUBLISH_ENABLED` was `true` on October 12, 2026.
+That flag alone does not establish a working publication path. The `npm`
+environment existed with required reviewers, but its `v*` policy was a **branch**
+policy rather than a **tag** policy, and self-review was allowed. Correct and
+re-verify those settings against the requirements below before the next release.
+The npm trusted-publisher configuration was not inspected by this verification.
 
 The release entry point is a reviewed `v*` tag, handled by
 [publish.yml](../.github/workflows/publish.yml). Do not publish from a developer
 machine. The version tag must equal `v` followed by `package.json`'s version, and
 the tagged commit must be reachable from the repository's `main` branch.
 
-## Owner setup before a first release
+## Owner setup before a release
 
 These settings require repository or npm ownership; committing a workflow does
 not configure them. Review their actual state before enabling publication.
@@ -19,10 +28,9 @@ not configure them. Review their actual state before enabling publication.
    `braydenyancy`, repository `centrail-calculations`, workflow `publish.yml`
    and environment `npm`. Allow the `npm publish` action explicitly; a publisher
    configured only to stage releases does not permit this workflow's publication.
-2. Resolve first-publication bootstrap before enabling the workflow if the package
-   does not yet exist on npm. The current trusted-publisher setup expects a
-   registered package. Establish an approved tag/CI bootstrap path; the repository
-   does not provide a manual-publish or long-lived-token fallback.
+2. The package now exists on npm; first-publication bootstrap is complete.
+   Confirm that the configured trusted publisher can publish the next version.
+   The repository does not provide a manual-publish or long-lived-token fallback.
 3. Create the GitHub `npm` environment. Require an appropriate reviewer, prevent
    self-review and disable administrator bypass where supported. Restrict its
    deployment tags to `v*` and verify the restriction excludes ordinary branches.
