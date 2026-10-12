@@ -121,6 +121,22 @@ the retained proposals offline.
 
 ## Contribute
 
+Verification covers distinct layers; agreement in one layer does not prove another.
+
+| Comparison | Executed coverage | Remaining limits |
+| --- | --- | --- |
+| ccusage, Tokscale and other collection tools | [CLI comparison suite](https://github.com/braydenyancy/centrail-cli/pull/15) compares retained/generated file trees and token accounting | Separate from this library; no proof of billed cost |
+| LiteLLM | Importer regressions and retained pricing snapshot regeneration; optional real `completion_cost` differential on seven synthetic cases | No live provider rates or billing invoices |
+| Langfuse | Exact pinned `calculateUsageCosts` method execution on the same seven cases | Full ingestion, normalization, model matching and tier selection are outside this suite |
+| models.dev / OpenRouter | Observation parser regressions and reviewable source records | No calculator execution; observations do not become accepted prices automatically |
+| Energy | Retained coefficients/fixture regeneration, 32-model numerical replay and tamper rejection | Scenario estimates, not measured energy or independent scientific validation |
+
+Run the optional cost comparisons with `npm run prepare:cost-comparisons` once,
+then `npm run test:cost-comparisons` offline. See the
+[comparison scope and reproduction](docs/verification/cost-comparisons.md).
+`npm run test:published` separately verifies immutable public npm bytes and
+installed-consumer behavior; it requires network access.
+
 Useful contributions include counterexamples, clearer assumptions, better source
 evidence, new methods and tests that expose numerical or coverage mistakes. Start
 with [CONTRIBUTING.md](CONTRIBUTING.md). Use the issue forms for bugs and methodology

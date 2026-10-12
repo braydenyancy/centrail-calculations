@@ -1,0 +1,137 @@
+[
+  {
+    "id": "base",
+    "provider": "openai",
+    "model": "gpt-centrail-base",
+    "source": {
+      "mode": "chat",
+      "input_cost_per_token": 0.000002,
+      "output_cost_per_token": 0.000006,
+      "cache_read_input_token_cost": 5e-7,
+      "litellm_provider": "openai"
+    },
+    "usage": {
+      "input": 15,
+      "output": 10,
+      "cacheRead": 0,
+      "cacheWrite5m": 0,
+      "cacheWrite1h": 0
+    },
+    "comparable": true
+  },
+  {
+    "id": "cache-read",
+    "provider": "openai",
+    "model": "gpt-centrail-cache-read",
+    "source": {
+      "mode": "chat",
+      "input_cost_per_token": 0.000002,
+      "output_cost_per_token": 0.000006,
+      "cache_read_input_token_cost": 5e-7,
+      "litellm_provider": "openai"
+    },
+    "usage": {
+      "input": 15,
+      "output": 10,
+      "cacheRead": 5,
+      "cacheWrite5m": 0,
+      "cacheWrite1h": 0
+    },
+    "comparable": true
+  },
+  {
+    "id": "cache-ttl",
+    "provider": "anthropic",
+    "model": "claude-centrail-cache-ttl",
+    "source": {
+      "mode": "chat",
+      "input_cost_per_token": 0.000003,
+      "output_cost_per_token": 0.000006,
+      "cache_read_input_token_cost": 5e-7,
+      "cache_creation_input_token_cost": 0.00000375,
+      "cache_creation_input_token_cost_above_1hr": 0.000006,
+      "litellm_provider": "anthropic"
+    },
+    "usage": {
+      "input": 15,
+      "output": 10,
+      "cacheRead": 5,
+      "cacheWrite5m": 7,
+      "cacheWrite1h": 3
+    },
+    "comparable": true
+  },
+  {
+    "id": "explicit-zero",
+    "provider": "openai",
+    "model": "gpt-centrail-explicit-zero",
+    "source": {
+      "mode": "chat",
+      "input_cost_per_token": 0,
+      "output_cost_per_token": 0,
+      "cache_read_input_token_cost": 5e-7,
+      "litellm_provider": "openai"
+    },
+    "usage": {
+      "input": 10,
+      "output": 4,
+      "cacheRead": 0,
+      "cacheWrite5m": 0,
+      "cacheWrite1h": 0
+    },
+    "comparable": true
+  },
+  {
+    "id": "rounding",
+    "provider": "openai",
+    "model": "gpt-centrail-rounding",
+    "source": {
+      "mode": "chat",
+      "input_cost_per_token": 5e-7,
+      "output_cost_per_token": 0.000006,
+      "cache_read_input_token_cost": 5e-7,
+      "litellm_provider": "openai"
+    },
+    "usage": {
+      "input": 1,
+      "output": 0,
+      "cacheRead": 0,
+      "cacheWrite5m": 0,
+      "cacheWrite1h": 0
+    },
+    "comparable": true
+  },
+  {
+    "id": "missing-cache",
+    "provider": "openai",
+    "model": "gpt-centrail-missing-cache",
+    "source": {
+      "mode": "chat",
+      "input_cost_per_token": 0.000002,
+      "output_cost_per_token": 0.000006,
+      "litellm_provider": "openai"
+    },
+    "usage": {
+      "input": 15,
+      "output": 10,
+      "cacheRead": 5,
+      "cacheWrite5m": 0,
+      "cacheWrite1h": 0
+    },
+    "comparable": false
+  },
+  {
+    "id": "unknown-model",
+    "provider": "openai",
+    "model": "gpt-centrail-unknown-model",
+    "source": null,
+    "usage": {
+      "input": 1,
+      "output": 0,
+      "cacheRead": 0,
+      "cacheWrite5m": 0,
+      "cacheWrite1h": 0
+    },
+    "comparable": false
+  }
+]

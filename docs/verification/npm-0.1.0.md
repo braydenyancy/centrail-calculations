@@ -5,6 +5,25 @@ Verified October 12, 2026 against the public registry and an isolated installati
 18:33:46.984 UTC; `latest` resolves to `0.1.0`. A bootstrap `0.0.0-stage` version
 also exists and is not the stable installation target.
 
+Re-run the retained checks with `npm run test:published`, or save a JSON receipt
+with `npm run test:published -- --out artifacts/published-0.1.0.json` after
+`npm ci`. This optional command uses the public npm registry and is separate from
+the offline/default checks. It pins immutable version `0.1.0` and the tarball hash
+below, so a future `latest` release does not silently change the test target.
+It creates and removes an isolated temporary consumer, installs without lifecycle
+scripts or inherited npm configuration/credentials, exercises the existing packed
+consumer fixtures and examples, and verifies the installed lockfile integrity.
+
+The suite compares the published runtime, declarations, license and NOTICE against
+the current build and compares the package contract with development scripts
+excluded. README and development-script differences are reported separately:
+the publication documentation was updated after the verified runtime revision.
+An intentional runtime or package-contract change requires a new publication
+verification baseline; this suite will fail until that baseline is reviewed.
+The byte comparison requires LF checkout bytes for LICENSE and NOTICE. Native
+macOS/Windows execution of this optional registry suite remains unverified;
+checkout newline conversion can fail equality without a content change.
+
 ## Contents and source
 
 - [Registry metadata](https://registry.npmjs.org/@centrail%2Fcalculations)
