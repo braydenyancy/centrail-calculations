@@ -4,7 +4,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const excluded = new Set([".git", "node_modules", "dist", "coverage"]);
+const excluded = new Set([".git", "node_modules", "dist", "coverage", "artifacts"]);
 const documents = [];
 function visit(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {

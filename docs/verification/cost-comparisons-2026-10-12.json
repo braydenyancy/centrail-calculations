@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-12T20:50:02.317Z",
+  "cases": 7,
+  "comparable": 5,
+  "toleranceUsd": 1e-12,
+  "fixturesSha256": "fa6ae94ff259dc9b6441c8581c0a5f84a6a922576a43891a819f8f5d66a561ff",
+  "fixtures": [
+    {
+      "id": "base",
+      "provider": "openai",
+      "model": "gpt-centrail-base",
+      "source": {
+        "mode": "chat",
+        "input_cost_per_token": 0.000002,
+        "output_cost_per_token": 0.000006,
+        "cache_read_input_token_cost": 5e-7,
+        "litellm_provider": "openai"
+      },
+      "usage": {
+        "input": 15,
+        "output": 10,
+        "cacheRead": 0,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0
+      },
+      "comparable": true
+    },
+    {
+      "id": "cache-read",
+      "provider": "openai",
+      "model": "gpt-centrail-cache-read",
+      "source": {
+        "mode": "chat",
+        "input_cost_per_token": 0.000002,
+        "output_cost_per_token": 0.000006,
+        "cache_read_input_token_cost": 5e-7,
+        "litellm_provider": "openai"
+      },
+      "usage": {
+        "input": 15,
+        "output": 10,
+        "cacheRead": 5,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0
+      },
+      "comparable": true
+    },
+    {
+      "id": "cache-ttl",
+      "provider": "anthropic",
+      "model": "claude-centrail-cache-ttl",
+      "source": {
+        "mode": "chat",
+        "input_cost_per_token": 0.000003,
+        "output_cost_per_token": 0.000006,
+        "cache_read_input_token_cost": 5e-7,
+        "cache_creation_input_token_cost": 0.00000375,
+        "cache_creation_input_token_cost_above_1hr": 0.000006,
+        "litellm_provider": "anthropic"
+      },
+      "usage": {
+        "input": 15,
+        "output": 10,
+        "cacheRead": 5,
+        "cacheWrite5m": 7,
+        "cacheWrite1h": 3
+      },
+      "comparable": true
+    },
+    {
+      "id": "explicit-zero",
+      "provider": "openai",
+      "model": "gpt-centrail-explicit-zero",
+      "source": {
+        "mode": "chat",
+        "input_cost_per_token": 0,
+        "output_cost_per_token": 0,
+        "cache_read_input_token_cost": 5e-7,
+        "litellm_provider": "openai"
+      },
+      "usage": {
+        "input": 10,
+        "output": 4,
+        "cacheRead": 0,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0
+      },
+      "comparable": true
+    },
+    {
+      "id": "rounding",
+      "provider": "openai",
+      "model": "gpt-centrail-rounding",
+      "source": {
+        "mode": "chat",
+        "input_cost_per_token": 5e-7,
+        "output_cost_per_token": 0.000006,
+        "cache_read_input_token_cost": 5e-7,
+        "litellm_provider": "openai"
+      },
+      "usage": {
+        "input": 1,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0
+      },
+      "comparable": true
+    },
+    {
+      "id": "missing-cache",
+      "provider": "openai",
+      "model": "gpt-centrail-missing-cache",
+      "source": {
+        "mode": "chat",
+        "input_cost_per_token": 0.000002,
+        "output_cost_per_token": 0.000006,
+        "litellm_provider": "openai"
+      },
+      "usage": {
+        "input": 15,
+        "output": 10,
+        "cacheRead": 5,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0
+      },
+      "comparable": false
+    },
+    {
+      "id": "unknown-model",
+      "provider": "openai",
+      "model": "gpt-centrail-unknown-model",
+      "source": null,
+      "usage": {
+        "input": 1,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 0
+      },
+      "comparable": false
+    }
+  ],
+  "competitors": {
+    "litellm": {
+      "version": "1.105.0",
+      "function": "completion_cost",
+      "networkDisabled": true,
+      "networkAttempts": 0,
+      "parentDotenvNotLoaded": true
+    },
+    "langfuse": {
+      "commit": "a27d317564faa31c0f069595aa4825d1fda880ec",
+      "sourceSha256": "ae759f5ad82514745340ed6d78ff47763de0b6e2e955b9b816445c5bd85f8e07",
+      "methodSha256": "1f0e3ed8dbd1406e5c1f50e659ebf162daa20575d2f748df580bbbb7a39bd783",
+      "function": "IngestionService.calculateUsageCosts",
+      "scope": "Exact isolated source method; excludes normalization, model matching, tier selection and DB ingestion",
+      "decimalVersion": "10.6.0"
+    }
+  },
+  "rows": [
+    {
+      "id": "base",
+      "comparable": true,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "29961d1a53d7e8d8afa5490b9732527892757f7c60939d3e0f05c5df7ff055c5",
+        "units": "90000000",
+        "denominator": "1000000000000",
+        "usdExact": "0.00009",
+        "usd": 0.00009,
+        "events": 1,
+        "tokens": 25,
+        "pricedTokens": 25,
+        "issues": [],
+        "assumptions": [],
+        "coverage": "complete"
+      },
+      "frozenUsd": "0.00009",
+      "litellm": {
+        "id": "base",
+        "usd": 0.00008999999999999999
+      },
+      "langfuse": {
+        "cost_details": {
+          "input": 0.00003,
+          "output": 0.00006,
+          "input_cached": 0,
+          "total": 0.00009
+        },
+        "total_cost": 0.00009
+      }
+    },
+    {
+      "id": "cache-read",
+      "comparable": true,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "197aac8f59db1d0e515ce359d87d8bbdcceb4fd6444215b2fe6e586b43192749",
+        "units": "92500000",
+        "denominator": "1000000000000",
+        "usdExact": "0.0000925",
+        "usd": 0.0000925,
+        "events": 1,
+        "tokens": 30,
+        "pricedTokens": 30,
+        "issues": [],
+        "assumptions": [],
+        "coverage": "complete"
+      },
+      "frozenUsd": "0.000093",
+      "litellm": {
+        "id": "cache-read",
+        "usd": 0.0000925
+      },
+      "langfuse": {
+        "cost_details": {
+          "input": 0.00003,
+          "output": 0.00006,
+          "input_cached": 0.0000025,
+          "total": 0.00009250000000000001
+        },
+        "total_cost": 0.00009250000000000001
+      }
+    },
+    {
+      "id": "cache-ttl",
+      "comparable": true,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "d442434493878d13fb46234bca9db2be3ea187abc9174502473070ab7d776fb8",
+        "units": "151750000",
+        "denominator": "1000000000000",
+        "usdExact": "0.00015175",
+        "usd": 0.00015175,
+        "events": 1,
+        "tokens": 40,
+        "pricedTokens": 40,
+        "issues": [],
+        "assumptions": [],
+        "coverage": "complete"
+      },
+      "frozenUsd": "0.000152",
+      "litellm": {
+        "id": "cache-ttl",
+        "usd": 0.00015175
+      },
+      "langfuse": {
+        "cost_details": {
+          "input": 0.000045,
+          "output": 0.00006,
+          "input_cached": 0.0000025,
+          "input_cache_creation_5m": 0.00002625,
+          "input_cache_creation_1h": 0.000018,
+          "total": 0.00015175000000000003
+        },
+        "total_cost": 0.00015175000000000003
+      }
+    },
+    {
+      "id": "explicit-zero",
+      "comparable": true,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "d2b740543827c3e48b59e2719e72d172401fd7d2c8b1b045462c9ebc8e19479a",
+        "units": "0",
+        "denominator": "1000000000000",
+        "usdExact": "0",
+        "usd": 0,
+        "events": 1,
+        "tokens": 14,
+        "pricedTokens": 14,
+        "issues": [],
+        "assumptions": [],
+        "coverage": "complete"
+      },
+      "frozenUsd": "0",
+      "litellm": {
+        "id": "explicit-zero",
+        "usd": 0
+      },
+      "langfuse": {
+        "cost_details": {
+          "input": 0,
+          "output": 0,
+          "input_cached": 0,
+          "total": 0
+        },
+        "total_cost": 0
+      }
+    },
+    {
+      "id": "rounding",
+      "comparable": true,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "b14fb14e21f4529ab6a097c11a15e09d4bac7442f536ed1485360ac989e11dff",
+        "units": "500000",
+        "denominator": "1000000000000",
+        "usdExact": "0.0000005",
+        "usd": 5e-7,
+        "events": 1,
+        "tokens": 1,
+        "pricedTokens": 1,
+        "issues": [],
+        "assumptions": [],
+        "coverage": "complete"
+      },
+      "frozenUsd": "0.000001",
+      "litellm": {
+        "id": "rounding",
+        "usd": 5e-7
+      },
+      "langfuse": {
+        "cost_details": {
+          "input": 5e-7,
+          "output": 0,
+          "input_cached": 0,
+          "total": 5e-7
+        },
+        "total_cost": 5e-7
+      }
+    },
+    {
+      "id": "missing-cache",
+      "comparable": false,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "ac56ac3c16e100492f45d2b96b5f747b0894602b5a3c1ebfce3e7fd1dd4c686d",
+        "units": "90000000",
+        "denominator": "1000000000000",
+        "usdExact": "0.00009",
+        "usd": 0.00009,
+        "events": 1,
+        "tokens": 30,
+        "pricedTokens": 25,
+        "issues": [
+          "cacheRead_missing"
+        ],
+        "assumptions": [],
+        "coverage": "partial"
+      },
+      "frozenUsd": "0.00009",
+      "litellm": {
+        "id": "missing-cache",
+        "usd": 0.00009999999999999999
+      },
+      "langfuse": {
+        "cost_details": {
+          "input": 0.00003,
+          "output": 0.00006,
+          "total": 0.00009
+        },
+        "total_cost": 0.00009
+      }
+    },
+    {
+      "id": "unknown-model",
+      "comparable": false,
+      "centrail": {
+        "methodId": "token-buckets-v3",
+        "methodRevision": "1",
+        "parameterRevision": "ed3ad973d3a760e18dc15ece06c73efb2ab6a1d7fb521f64482caa2c6813f587",
+        "units": "0",
+        "denominator": "1000000000000",
+        "usdExact": "0",
+        "usd": 0,
+        "events": 1,
+        "tokens": 1,
+        "pricedTokens": 0,
+        "issues": [
+          "model_unavailable"
+        ],
+        "assumptions": [],
+        "coverage": "unpriced"
+      },
+      "frozenUsd": "0",
+      "litellm": {
+        "id": "unknown-model",
+        "error": "ModelNotMappedError",
+        "message": "This model isn't mapped yet. model=gpt-centrail-unknown-model, custom_llm_provider=openai. Add it here - https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json."
+      },
+      "langfuse": {
+        "cost_details": {}
+      }
+    }
+  ]
+}

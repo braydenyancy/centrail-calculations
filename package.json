@@ -64,7 +64,10 @@
     "calculations": "node --import tsx scripts/calculations.ts",
     "observe-catalog": "node --import tsx scripts/observe-catalog.ts",
     "prepack": "npm run build",
-    "test:docs": "node scripts/check-docs.mjs"
+    "test:docs": "node scripts/check-docs.mjs",
+    "test:published": "node scripts/test-published.mjs",
+    "test:cost-comparisons": "npm run build && node scripts/test-cost-comparisons.mjs",
+    "prepare:cost-comparisons": "node scripts/setup-cost-comparisons.mjs"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
