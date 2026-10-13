@@ -139,7 +139,8 @@ installed-consumer behavior; it requires network access.
 
 Useful contributions include counterexamples, clearer assumptions, better source
 evidence, new methods and tests that expose numerical or coverage mistakes. Start
-with [CONTRIBUTING.md](CONTRIBUTING.md). Use the issue forms for bugs and methodology
+with [CONTRIBUTING.md](CONTRIBUTING.md). Maintainers use the
+[release pattern](docs/releasing.md). Use the issue forms for bugs and methodology
 proposals, and [SECURITY.md](SECURITY.md) for sensitive vulnerability reports.
 Participation follows the [code of conduct](CODE_OF_CONDUCT.md).
 
