@@ -20,6 +20,11 @@ not request a package release. Use conventional squash-merge titles. The manifes
 starts from the already-published 0.1.0 and its verified runtime commit; no
 retroactive tag or republish is created for that version.
 
+The built-in GitHub token also suppresses `pull_request` events for generated
+release PRs. Preparation explicitly dispatches the six-platform CI workflow at
+the same-repository release branch, validating its main base and branch prefix
+before dispatch. A product branch or fork cannot receive that dispatch.
+
 Merge the release PR once its tests and human review pass. The automation creates
 the immutable `v*` tag and starts publication at that tag. GitHub's default token
 does not trigger another workflow by creating a tag, so the handoff explicitly
@@ -93,9 +98,8 @@ Matching existing versions are reused without another publish or dist-tag change
 A separate read-only job verifies the published bytes. This checks provenance
 metadata presence; it does not independently verify the attestation signature.
 
-For a Release Please PR whose CI has not started, GitHub may require a maintainer
-to approve the workflow run. Approval of workflow execution is separate from
-approval of the release PR. Do not merge without the normal verification checks.
+If preparation could not dispatch CI, retry preparation on main or dispatch CI
+at the existing release branch. Do not merge without the normal verification checks.
 
 The [executed automation receipt](verification/2026-10-12-release-automation.json)
 records actual pinned-SDK dry runs: current history requests no new release; a
