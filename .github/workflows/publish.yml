@@ -3,26 +3,31 @@ name: Publish
 on:
   push:
     tags: ['v*']
+  # Release preparation dispatches at its created tag; this also permits retrying
+  # an existing reviewed tag without moving it. Dispatch from a branch is refused.
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: publish-${{ github.ref }}
+  group: publish
   cancel-in-progress: false
 
 jobs:
   verify:
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     uses: ./.github/workflows/ci.yml
 
   package:
     name: Prepare tested package
     needs: verify
-    if: github.repository == 'braydenyancy/centrail-calculations' && vars.NPM_PUBLISH_ENABLED == 'true'
+    if: github.repository == 'braydenyancy/centrail-calculations' && github.ref_type == 'tag' && vars.NPM_PUBLISH_ENABLED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
       dist-tag: ${{ steps.version.outputs.dist-tag }}
+      publish-needed: ${{ steps.registry.outputs.publish-needed }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -40,7 +45,9 @@ jobs:
           node --input-type=module <<'NODE'
           import { appendFileSync, readFileSync } from 'node:fs';
           const { name, version } = JSON.parse(readFileSync('package.json', 'utf8'));
-          if (name !== '@centrail/calculations' || process.env.GITHUB_REF_NAME !== `v${version}`) {
+          const manifest = JSON.parse(readFileSync('.release-please-manifest.json', 'utf8'));
+          if (process.env.GITHUB_REF_TYPE !== 'tag' || name !== '@centrail/calculations'
+              || process.env.GITHUB_REF_NAME !== `v${version}` || manifest['.'] !== version) {
             throw new Error('The release tag must match @centrail/calculations package.json version');
           }
           appendFileSync(process.env.GITHUB_OUTPUT, `dist-tag=${version.includes('-') ? 'next' : 'latest'}\n`);
@@ -49,18 +56,25 @@ jobs:
       - run: npm run check
       - name: Retain the exact tarball tested by isolated consumers
         run: npm run test:package -- --out artifacts
+      - name: Check immutable registry version before publication
+        id: registry
+        run: node scripts/release-registry.mjs preflight artifacts/pack-report.json
+      - name: Retain the registry verifier for the read-only post-publication job
+        run: cp scripts/release-registry.mjs artifacts/release-registry.mjs
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: npm-package
           path: |
             artifacts/*.tgz
             artifacts/pack-report.json
+            artifacts/release-registry.mjs
           if-no-files-found: error
           retention-days: 30
 
   publish:
     name: Publish tested package
     needs: package
+    if: needs.package.outputs.publish-needed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: npm
@@ -103,3 +117,22 @@ jobs:
         env:
           NPM_DIST_TAG: ${{ needs.package.outputs.dist-tag }}
         run: npm publish artifacts/*.tgz --access public --provenance --ignore-scripts --tag "$NPM_DIST_TAG"
+
+  published:
+    name: Verify published bytes
+    needs: [package, publish]
+    if: always() && needs.package.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: npm-package
+          path: artifacts
+      - run: node artifacts/release-registry.mjs verify artifacts/pack-report.json

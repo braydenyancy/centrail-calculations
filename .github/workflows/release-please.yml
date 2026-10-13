@@ -1,0 +1,39 @@
+name: Release preparation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-preparation
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'braydenyancy/centrail-calculations' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      actions: write
+    steps:
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      # GITHUB_TOKEN-created tags do not trigger tag push workflows. Dispatch at
+      # that immutable tag, keeping publication out of branch-context runs.
+      - name: Start publication for the created version tag
+        if: steps.release.outputs.release_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
+        run: gh workflow run publish.yml --ref "$RELEASE_TAG"
