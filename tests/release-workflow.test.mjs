@@ -23,7 +23,7 @@ describe("generated release PR checks",()=>{
     const run=new AsyncFunction("github","context","process",dispatch);
     if(allowed) {
       await run(github,context,process);
-      expect(calls).toEqual([{...context.repo,workflow_id:"ci.yml",ref}]);
+      expect(calls).toEqual(["ci.yml","codeql.yml"].map(workflow_id=>({...context.repo,workflow_id,ref})));
     } else {
       await expect(run(github,context,process)).rejects.toThrow("Unexpected release PR branch");
       expect(calls).toEqual([]);

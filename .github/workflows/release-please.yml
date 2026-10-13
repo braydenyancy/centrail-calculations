@@ -40,7 +40,9 @@ jobs:
             if (prs.length !== 1) throw new Error('Expected one package release PR');
             const { data: pr } = await github.rest.pulls.get({ ...context.repo, pull_number: prs[0].number });
             if (pr.base.ref !== 'main' || pr.head.repo.full_name !== `${context.repo.owner}/${context.repo.repo}` || !pr.head.ref.startsWith('release-please--branches--main')) throw new Error('Unexpected release PR branch');
-            await github.rest.actions.createWorkflowDispatch({ ...context.repo, workflow_id: 'ci.yml', ref: pr.head.ref });
+            for (const workflow_id of ['ci.yml', 'codeql.yml']) {
+              await github.rest.actions.createWorkflowDispatch({ ...context.repo, workflow_id, ref: pr.head.ref });
+            }
       # GITHUB_TOKEN-created tags do not trigger tag push workflows. Dispatch at
       # that immutable tag, keeping publication out of branch-context runs.
       - name: Start publication for the created version tag

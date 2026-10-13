@@ -6,7 +6,7 @@
 Release Please updates version, lockfile and changelog from conventional runtime
 `feat:`/`fix:` commits. Documentation/tests alone do not request a new version.
 GitHub's built-in token suppresses downstream PR/tag events; preparation explicitly
-starts CI at the release branch and publication at the tag. A branch cannot publish.
+starts CI and CodeQL at the release branch and publication at the tag. A branch cannot publish.
 
 ## Owner setup
 
