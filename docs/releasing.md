@@ -13,7 +13,21 @@ policy rather than a **tag** policy, and self-review was allowed. Correct and
 re-verify those settings against the requirements below before the next release.
 The npm trusted-publisher configuration was not inspected by this verification.
 
-The release entry point is a reviewed `v*` tag, handled by
+Release preparation is automated by
+[release-please.yml](../.github/workflows/release-please.yml). Runtime `fix:` and
+`feat:` changes maintain a reviewed version/changelog PR; docs and tests alone do
+not request a package release. Use conventional squash-merge titles. The manifest
+starts from the already-published 0.1.0 and its verified runtime commit; no
+retroactive tag or republish is created for that version.
+
+Merge the release PR once its tests and human review pass. The automation creates
+the immutable `v*` tag and starts publication at that tag. GitHub's default token
+does not trigger another workflow by creating a tag, so the handoff explicitly
+dispatches `publish.yml` with the tag ref. A dispatch from `main` cannot publish.
+This also permits retrying the existing tag without changing it or creating a
+new version. No personal access token or additional release-bot key is required.
+
+The release entry point remains a reviewed `v*` tag, handled by
 [publish.yml](../.github/workflows/publish.yml). Do not publish from a developer
 machine. The version tag must equal `v` followed by `package.json`'s version, and
 the tagged commit must be reachable from the repository's `main` branch.
@@ -51,15 +65,15 @@ token secret fallback. See npm's
 
 ## Prepare and verify
 
-- Update the package version and lockfile, and turn the relevant `Unreleased`
-  changelog entries into a dated version section. Explain changed APIs, methods,
+- Review the proposed package version, lockfile and dated changelog. Explain changed APIs, methods,
   artifact formats, parameter coverage and migration needs separately.
 - Run `npm run check` and inspect a clean packed package. Retained source snapshots
   belong in the repository; only the allowlisted runtime, declarations and package
   notices belong in the tarball.
-- Review and merge the release preparation. Ensure the intended commit has passed
+- Review and merge the release preparation PR. Ensure the intended commit has passed
   Linux, macOS and Windows checks on Node.js 22 and 24. Push only the approved
-  version tag.
+  version tag for an exceptional manual release; ordinary release preparation
+  creates its tag and dispatches publication automatically.
 
 The tag workflow reruns the full verification matrix. A job with read-only
 repository permissions prepares the package and verifies the exact tarball in an
@@ -69,6 +83,26 @@ name, version and tag before publishing with provenance and lifecycle scripts di
 not install dependencies or run repository tests with publishing credentials.
 Prerelease versions use the `next` npm distribution tag; stable versions use
 `latest`.
+
+Publication workflows serialize across all tags. Before publication, the
+read-only preparation job checks the exact registry version: a 404 permits
+publication, an outage fails the check, and an existing version must match the
+tested tarball SHA-256 and registry checksums and contain provenance metadata.
+An unpublished stable version must be greater than npm's current `latest`.
+Matching existing versions are reused without another publish or dist-tag change.
+A separate read-only job verifies the published bytes. This checks provenance
+metadata presence; it does not independently verify the attestation signature.
+
+For a Release Please PR whose CI has not started, GitHub may require a maintainer
+to approve the workflow run. Approval of workflow execution is separate from
+approval of the release PR. Do not merge without the normal verification checks.
+
+The [executed automation receipt](verification/2026-10-12-release-automation.json)
+records actual pinned-SDK dry runs: current history requests no new release; a
+synthetic runtime fix proposes aligned package/lockfile/manifest version 0.1.1;
+a synthetic test-only fix requests none. Unit tests execute the actual workflow's
+tag/manifest guard and registry retry boundaries. These probes create no PRs,
+tags or publications and do not establish owner-setting readiness.
 
 ## Release receipt
 

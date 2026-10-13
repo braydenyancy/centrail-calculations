@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "94b9dbf60507c8beab82a583101d3074a3dd2c16",
+  "include-component-in-tag": false,
+  "include-v-in-tag": true,
+  "pull-request-header": "Release preparation",
+  "pull-request-footer": "Publication requires the reviewed version tag to pass package verification and the npm environment gate.",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": false,
+      "exclude-paths": ["docs", "tests", ".github"]
+    }
+  }
+}

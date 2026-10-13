@@ -55,9 +55,17 @@ scanning and push protection where available. Dependabot version updates are
 declared in [.github/dependabot.yml](../.github/dependabot.yml). The advanced CodeQL
 workflow is checked in; avoid enabling a duplicate default CodeQL setup.
 
-Set default workflow token permissions to read-only and leave workflow-created
-pull-request approvals disabled. Workflow jobs request narrowly scoped permissions
-where needed. Require approval before running workflows from first-time external
+Set default workflow token permissions to read-only. Enable the GitHub setting
+"Allow GitHub Actions to create and approve pull requests" so release preparation
+can open its version PR. The workflow creates PRs; it does not approve them. Main
+still requires human review. The owner can apply the setting with:
+
+```sh
+gh api --method PUT repos/braydenyancy/centrail-calculations/actions/permissions/workflow --input .github/repository-settings/actions-workflow-permissions.json
+```
+
+Workflow jobs request narrowly scoped permissions where needed. Require approval
+before running workflows from first-time external
 contributors. GitHub Actions are pinned to reviewed commit hashes; Dependabot
 proposes updates rather than silently changing those revisions.
 
