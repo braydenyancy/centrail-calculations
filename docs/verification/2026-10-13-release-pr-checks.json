@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-13",
+  "base": "9fbb7cead1aa4827895deb5069843547c0705b40",
+  "problem": "GITHUB_TOKEN-created release PRs suppress pull_request workflow triggers",
+  "solution": "Explicitly dispatch CI at a validated same-repository main release branch",
+  "verification": {
+    "npm run check": "passed: 176 tests, typecheck, build, deterministic artifacts, packed CLI and server consumers",
+    "sourceDerivedDispatchCases": ["same repository release branch dispatches", "fork rejects", "different base rejects", "product branch rejects"],
+    "actionlint 1.7.7": "passed"
+  },
+  "limits": ["No package version, tag or publication created", "Owner settings and npm trusted publisher remain external prerequisites", "Hosted checks must pass on the submitted head"]
+}
