@@ -1,0 +1,108 @@
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 check
+> npm run typecheck && npm test && npm run test:docs && npm run test:artifacts && npm run test:package
+
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 typecheck
+> tsc --noEmit
+
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/alynes/dvoid/workstreams/centrail/docs-review/centrail-calculations
+
+
+ Test Files  7 passed (7)
+      Tests  176 passed (176)
+   Start at  03:18:28
+   Duration  324ms (transform 46%, tests 37%, import 14%, worker 2%)
+
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 test:docs
+> node scripts/check-docs.mjs
+
+60 local links resolve across 25 Markdown documents
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 test:artifacts
+> node scripts/test-artifacts.mjs
+
+{
+  "retainedFilesReproduced": [
+    "pricing/METHOD.md",
+    "pricing/SOURCE-LICENSE.txt",
+    "pricing/artifact.json",
+    "pricing/methodology.md",
+    "pricing/proposal.json",
+    "pricing/source-manifest.json",
+    "pricing/source.json",
+    "energy/METHOD.md",
+    "energy/artifact.json",
+    "energy/manifest.json"
+  ],
+  "count": 10,
+  "overwriteRefused": true
+}
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 test:package
+> npm run build && node scripts/test-package.mjs
+
+npm warn Unknown user config "tokenHelper" (//npm.pkg.github.com/:tokenHelper). This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> @centrail/calculations@0.1.0 build
+> node scripts/build.mjs
+
+{
+  "name": "@centrail/calculations",
+  "version": "0.1.0",
+  "filename": "centrail-calculations-0.1.0.tgz",
+  "node": "v24.21.0",
+  "shasum": "3ab446c1ec8b59f0e058d4e7a833bc2b0ff984df",
+  "integrity": "sha512-3TbVe1k5IcB9BVon5t+am7NIPnlymESrot5q91wrEXDQ1uXNFk3jQh/2Id73ffjT4CdkXRp1lhTa/fRLWwzcYQ==",
+  "sha256": "abe7f0a6fed3080ec042c6221d03085e1af93918333477baed99573f9fb700b5",
+  "files": [
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "dist/catalog-observations.d.ts",
+    "dist/catalog-observations.js",
+    "dist/documents.d.ts",
+    "dist/documents.js",
+    "dist/energy.d.ts",
+    "dist/energy.js",
+    "dist/pricing.d.ts",
+    "dist/pricing.js",
+    "dist/workflow.d.ts",
+    "dist/workflow.js",
+    "package.json"
+  ],
+  "consumers": [
+    {
+      "consumer": "cli consumer",
+      "energyCases": 32,
+      "energyAssertions": 96,
+      "pricingMethodsDistinct": true,
+      "allFiveExportsExercised": true,
+      "hashTamperRejected": true,
+      "declarationsWithoutAmbientNodeTypes": true,
+      "documentedExamplesExecuted": true
+    },
+    {
+      "consumer": "server consumer",
+      "energyCases": 32,
+      "energyAssertions": 96,
+      "pricingMethodsDistinct": true,
+      "allFiveExportsExercised": true,
+      "hashTamperRejected": true,
+      "declarationsWithoutAmbientNodeTypes": true,
+      "documentedExamplesExecuted": true
+    }
+  ]
+}

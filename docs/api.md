@@ -106,3 +106,15 @@ hardware impacts are outside this method.
 
 See the [evidence commands](../calculations/README.md) for offline file operations
 and the [security boundaries](../SECURITY.md) when designing an ingestion service.
+
+## Consumer status
+
+As checked October 15, 2026, the Centrail app pins `0.1.0` and uses
+[`footprint.server.ts`](https://github.com/braydenyancy/centrail/blob/0c11d419268bd307ea3c99e076bb28ad774bf50b/src/lib/usage/footprint.server.ts)
+for server energy totals with a pinned parameter revision. This is code adoption,
+not evidence about a particular deployment. Pricing remains a proposal; this
+integration does not adopt the library's pricing catalog.
+
+The retained energy method's “no production caller” statement describes its
+October 8 capture. That statement is superseded by this consumer status; the
+method document remains unchanged because proposal hashes bind its exact bytes.
