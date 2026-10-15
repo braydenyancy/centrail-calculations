@@ -70,6 +70,8 @@ regression evidence; it is not independent environmental validation.
 
 The root `calculations/pricing/METHOD.md` and `calculations/energy/METHOD.md` are
 inputs to retained proposal hashes. Their wording is part of review identity.
+Their historical adoption statements are superseded by the
+[consumer status](api.md#consumer-status).
 Archive old proposal files unchanged; create a new proposal for an intentional
 method-document or parameter change. Do not alter old bytes and keep an old hash.
 

@@ -12,8 +12,9 @@ select a current catalog or collect usage data.
 is published. Its bytes match the verified source build; see the
 [publication receipt](docs/verification/npm-0.1.0.md) for checks and provenance
 limitations. Retained pricing data is a proposal for review, not an accepted current
-catalog. Extracting this package does not establish adoption by a production CLI
-or server. Energy estimates preserve a historical method and its limitations.
+catalog. The Centrail app now imports this package for server energy totals; see the
+[consumer status](docs/api.md#consumer-status). Energy estimates preserve a
+historical method and its limitations.
 
 ## Install
 
@@ -22,7 +23,16 @@ npm install --save-exact @centrail/calculations@0.1.0
 ```
 
 Use Node.js 22.12 or later. Import one of the modules listed below; there is no
-root export. Supply an explicit reviewed parameter artifact.
+root export. Supply an explicit reviewed parameter artifact. This package has no
+CLI executable: `npx @centrail/calculations` is not an installation or setup flow.
+A Node version manager such as mise supplies Node/npm; install the library in the
+consuming project with npm. The same npm commands apply on native Windows.
+
+To upgrade, install an explicitly reviewed version with
+`npm install --save-exact @centrail/calculations@<version>` and verify your retained
+inputs and artifacts against it. To remove the dependency, remove its imports and run
+`npm uninstall @centrail/calculations`; retained parameter files belong to your
+project and are not removed by npm.
 
 ## Try it locally
 
@@ -75,9 +85,11 @@ const estimate = replayEnergy(artifact, {
 
 // Retain method and parameter identity alongside the result.
 console.log({
+  methodId: artifact.parameters.methodId,
   methodRevision: artifact.parameters.methodRevision,
   parameterRevision: artifact.parameterRevision,
   unit: "kWh",
+  rangeMeaning: "scenario-bounds",
   estimate,
 });
 ```
@@ -103,7 +115,7 @@ There is no root export. Browser compatibility is not claimed.
 | --- | --- |
 | `token-rates-v1`, revision `1` | USD estimates rounded per event to six decimal places |
 | `token-buckets-v3`, revision `1` | USD estimates aggregated with integer units of 10⁻¹² USD |
-| `token-energy-v2` | Retained token-to-kWh coefficients, ordered model factors and scenario bounds |
+| `token-energy`, revision `token-energy-v2` | Retained token-to-kWh coefficients, ordered model factors and scenario bounds |
 
 Missing pricing evidence stays visible as partial or unpriced coverage; it is not
 treated as a supported zero price. The retained pricing proposal contains 21 exact

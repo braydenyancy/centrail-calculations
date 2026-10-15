@@ -1,5 +1,8 @@
 # Initial package verification
 
+Historical bootstrap receipt; current publication and approval instructions are in
+[Package releases](releasing.md).
+
 2026-10-09. This receipt covers the standalone package, its retained evidence and
 the repository's verification commands. It does not establish adoption by a CLI
 or server, an accepted pricing catalog, npm publication or scientific measurement.
