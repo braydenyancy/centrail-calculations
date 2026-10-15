@@ -115,7 +115,7 @@ There is no root export. Browser compatibility is not claimed.
 | --- | --- |
 | `token-rates-v1`, revision `1` | USD estimates rounded per event to six decimal places |
 | `token-buckets-v3`, revision `1` | USD estimates aggregated with integer units of 10⁻¹² USD |
-| `token-energy-v2` | Retained token-to-kWh coefficients, ordered model factors and scenario bounds |
+| `token-energy`, revision `token-energy-v2` | Retained token-to-kWh coefficients, ordered model factors and scenario bounds |
 
 Missing pricing evidence stays visible as partial or unpriced coverage; it is not
 treated as a supported zero price. The retained pricing proposal contains 21 exact
