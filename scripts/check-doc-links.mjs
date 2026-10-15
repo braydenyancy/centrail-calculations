@@ -34,9 +34,11 @@ function anchors(file) {
     if (heading) {
       const slug = heading.toLowerCase().replace(/<[^>]+>/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
         .replace(/[^\p{L}\p{M}\p{N}_\-\s]/gu, '').replace(/\s/g, '-');
-      const n = counts.get(slug) ?? 0;
+      let n = counts.get(slug) ?? 0;
+      let candidate = n ? `${slug}-${n}` : slug;
+      while (ids.has(candidate)) candidate = `${slug}-${++n}`;
       counts.set(slug, n + 1);
-      ids.add(n ? `${slug}-${n}` : slug);
+      ids.add(candidate);
     }
   }
   for (const match of text.matchAll(/\b(?:id|name)=["']([^"']+)["']/g)) ids.add(match[1]);
@@ -46,8 +48,9 @@ function anchors(file) {
 let checked = 0;
 const failures = [];
 for (const file of uniqueFiles) {
-  const text = prose(readFileSync(resolve(root, file), 'utf8'));
-  const links = [...text.matchAll(/!?\[[^\]\n]*\]\(\s*(<[^>]+>|(?:[^\s()]|\([^()]*\))+)(?:\s+["'][^\n]*?["'])?\s*\)/g),
+  const text = prose(readFileSync(resolve(root, file), 'utf8'))
+    .replace(/(`+)([\s\S]*?)\1/g, (span) => span.replace(/[^\n]/g, ' '));
+  const links = [...text.matchAll(/!?\[[^\]\n]*\]\(\s*(<[^>]+>|(?:[^\s()]|\((?:[^()]|\([^()]*\))*\))+)(?:\s+["'][^\n]*?["'])?\s*\)/g),
     ...text.matchAll(/^ {0,3}\[[^\]\n]+\]:\s*(<[^>]+>|\S+)/gm),
     ...text.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)];
   for (const match of links) {
