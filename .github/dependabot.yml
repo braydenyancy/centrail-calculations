@@ -9,6 +9,11 @@ updates:
       development:
         dependency-type: development
         update-types: [minor, patch]
+    ignore:
+      # Types track engines.node (>=22.12): a newer major would type-check APIs Node 22 lacks.
+      # Raise this together with engines.node.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
