@@ -4,7 +4,8 @@
 `vX.Y.Z` tag → verified CI artifacts → npm environment approval → npm.**
 
 Release Please updates version, lockfile and changelog from conventional runtime
-`feat:`/`fix:` commits. Documentation/tests alone do not request a new version.
+`feat:`/`fix:` commits. The configured `exclude-paths` omit `docs/`, `tests/` and
+`.github/` from release calculation. Ordinary documentation/test commits do not request a new version.
 GitHub's built-in token suppresses downstream PR/tag events; preparation explicitly
 starts CI and CodeQL at the release branch and publication at the tag. A branch cannot publish.
 
@@ -20,13 +21,24 @@ starts CI and CodeQL at the release branch and publication at the tag. A branch 
 - npm package Settings → Trusted publishing: GitHub owner `braydenyancy`, repo
   `centrail-calculations`, workflow `publish.yml`, environment `npm`.
   Explicitly permit direct `npm publish`; stage-only permission is insufficient.
-- Create fresh trust shortly before publishing: npm currently requires first use
-  within two days. Verify it works before retiring old automation tokens.
+- Check npm’s displayed activation requirements when configuring trust and verify
+  the first publication before retiring old automation tokens.
   Set `NPM_PUBLISH_ENABLED=true` only when these prerequisites are ready.
 
 Owner settings are external configuration; a merged workflow does not apply them.
-Both branch/tag policy and self-review needed correction when inspected October 12.
+Read-only verification on October 15 found `NPM_PUBLISH_ENABLED=true`, a `v*`
+**Tag** deployment policy, and required reviewers `braydenyancy` and `alynes` with
+self-review prevented. See the [review receipt](verification/docs-review-2026-10-15.md).
 [Repository settings](repository-settings.md) covers main/CodeQL protection.
+
+## Approval consistency decision
+
+Calculations still requires npm environment approval; the CLI repository has
+removed that reviewer gate and publishes automatically after its release PR.
+Keep following the calculations gate until the owners decide otherwise. The
+recommended alignment is to retain human review on the release PR and remove the
+second npm approval, matching the CLI. Alternatively, retain and explicitly own
+the extra gate here. No settings change is implied by this documentation.
 
 ## Each release
 
@@ -39,8 +51,11 @@ Both branch/tag policy and self-review needed correction when inspected October 
 4. Verify registry bytes, channel and provenance receipt. Stable uses `latest`,
    prerelease uses `next`. CI uses GitHub-hosted Node 24/npm 11.5.1+ and no token fallback.
 
-Retry the existing tag workflow after an interruption. Matching immutable versions
-are reused; byte mismatches fail, and a stale stable release cannot replace a newer
+The verifier polls a missing published version six times, one second apart; it
+does not have the CLI repository’s ten-minute propagation window. A registry
+propagation delay can fail verification after a successful publish. Retry the
+existing tag workflow after an interruption or delayed registry visibility.
+Matching immutable versions are reused; byte mismatches fail, and a stale stable release cannot replace a newer
 `latest`. Never republish a version or move a published tag. Provenance metadata
 presence is checked; the verification does not independently validate its signature chain.
 

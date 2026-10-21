@@ -37,6 +37,11 @@ This is a synthetic usage example against a **proposed**, incomplete catalog.
 Loading an artifact validates its structure and content hash; it does not approve
 its rates. Production callers choose a reviewed artifact explicitly.
 
+The amount is a token-price estimate, not an invoice or reconciled provider
+charge. The library has no invoice, subscription, discount or tax inputs. It
+does not attribute work to commits or establish productivity, savings or ROI;
+those require separate evidence and methods in the consuming product.
+
 `input`, `output`, `cacheRead` and `cacheCreation` are disjoint normalized counters.
 Do not pass an inclusive provider input total alongside its cached subset. The
 cache-write counters describe `cacheCreation`; they are not additional tokens.
@@ -73,6 +78,11 @@ Changing a method or regrouping events can change the result.
 `compileEnergyArtifact(parameterText)` validates the strict JSON-subset YAML and
 computes its content identity. `replayEnergy(artifact, tokens, model?)` accepts
 `input`, `output`, `cacheRead` and `cacheWrite` counts.
+These four buckets are disjoint. Energy's `cacheWrite` is **all cache-creation
+tokens**, including any cache TTL classes. When converting a normalized pricing
+event, pass its `cacheCreation` as energy's `cacheWrite`; do not pass only pricing's
+generic `cacheWrite` subset or add the TTL counters again. As with pricing, remove
+cached subsets from an inclusive provider input total before replay.
 `replayEnergyFromTotal(artifact, totalTokens, model?, mix?)` uses the retained
 rounded `chat` or `coding` mixture; the default is `chat`.
 
@@ -82,8 +92,9 @@ repeated in the return value. The [energy example](../examples/energy.mjs) shows
 that envelope.
 
 The retained energy method sanitizes negative and nonfinite token values to zero
-for compatibility. This differs from pricing's rejection of malformed counts;
-validate input at your ingestion boundary. Unknown or omitted models use the
+for compatibility and accepts positive fractional counts. This differs from
+pricing's rejection of malformed counts; validate input at your ingestion
+boundary. Unknown or omitted models use the
 retained default factor; known matching is ordered and case-normalized. Bounds
 are scenarios, not confidence intervals. Carbon, water, training and embodied
 hardware impacts are outside this method.
@@ -106,3 +117,20 @@ hardware impacts are outside this method.
 
 See the [evidence commands](../calculations/README.md) for offline file operations
 and the [security boundaries](../SECURITY.md) when designing an ingestion service.
+
+## Consumer status
+
+As checked October 15, 2026, the Centrail app pins `0.1.0` and uses
+[`footprint.server.ts`](https://github.com/braydenyancy/centrail/blob/0c11d419268bd307ea3c99e076bb28ad774bf50b/src/lib/usage/footprint.server.ts)
+for server energy totals with a pinned parameter revision. This is code adoption,
+not evidence about a particular deployment. Pricing remains a proposal; this
+integration does not adopt the library's pricing catalog.
+
+The app converts this package's kWh estimates to carbon and water with its own
+code. Those conversions are not exports of this library. Client components retain
+the app's local calculation, with numerical agreement checked by app tests;
+package adoption does not mean every displayed footprint runs this package.
+
+The retained energy method's “no production caller” statement describes its
+October 8 capture. That statement is superseded by this consumer status; the
+method document remains unchanged because proposal hashes bind its exact bytes.
