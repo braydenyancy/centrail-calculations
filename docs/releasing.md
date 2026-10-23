@@ -30,14 +30,18 @@ Both branch/tag policy and self-review needed correction when inspected October 
 
 ## Each release
 
-1. Review the version/changelog and green Linux/macOS/Windows Node 22/24 checks.
+1. Review the version/changelog and green Linux/macOS/Windows Node 22.23.4/24.22.1 checks.
    `npm run check` verifies types, tests, build, retained artifacts and packed consumers.
 2. Merge the release PR; preparation creates the immutable tag and starts tag CI.
 3. Approve the `npm` environment for that intended tag. Read-only preparation tests
    the package; the OIDC publisher downloads the same tested tarball and checks its
    hash. It installs no dependencies and performs no tests/builds with publishing credentials.
 4. Verify registry bytes, channel and provenance receipt. Stable uses `latest`,
-   prerelease uses `next`. CI uses GitHub-hosted Node 24/npm 11.5.1+ and no token fallback.
+   prerelease uses `next`. CI uses GitHub-hosted Node 24.22.1/npm 11.5.1+ and no token fallback.
+
+Update `.node-version`, both CI matrix floors, publication job pins and package/lockfile
+`engines` together for future security floors. The publisher and registry verifier
+have no checkout, so their Node versions are explicit workflow pins.
 
 Retry the existing tag workflow after an interruption. Matching immutable versions
 are reused; byte mismatches fail, and a stale stable release cannot replace a newer

@@ -3,7 +3,7 @@
 Reproducible API token-price and energy estimates, with explicit methods,
 versioned parameters and reviewable source evidence.
 
-`@centrail/calculations` is a TypeScript library for Node.js 22.12 and later. It
+`@centrail/calculations` is a TypeScript library for Node.js 22.23.4+ or 24.22.1+ (within those majors). It
 provides ESM modules and type declarations, with no runtime dependencies. Callers
 choose the exact method and parameter artifact; the library does not fetch rates,
 select a current catalog or collect usage data.
@@ -21,12 +21,12 @@ or server. Energy estimates preserve a historical method and its limitations.
 npm install --save-exact @centrail/calculations@0.1.0
 ```
 
-Use Node.js 22.12 or later. Import one of the modules listed below; there is no
+Use Node.js 22.23.4+ or 24.22.1+ (within those majors). Import one of the modules listed below; there is no
 root export. Supply an explicit reviewed parameter artifact.
 
 ## Try it locally
 
-Install a current Node.js 22 LTS release (at least 22.12) or Node.js 24 and npm, then:
+Install Node.js 24.22.1 (pinned in `.node-version`) or Node.js 22.23.4 and npm, then:
 
 ```sh
 git clone https://github.com/braydenyancy/centrail-calculations.git
@@ -44,7 +44,11 @@ why two one-token events can have different totals under retained rounding metho
 `npm run check` checks types, runs the tests, regenerates retained artifacts and
 tests an installed package in an isolated consumer. CI runs the checks on Linux,
 macOS and Windows with Node.js 22 and 24. Check the workflow results for a
-particular revision before relying on it.
+particular revision before relying on it. These security floors apply to this
+checkout and its next release; the already published 0.1.0 metadata is unchanged.
+Package `engines` is advisory for consumers unless they enable npm `engine-strict`;
+this repository enables it for local installs. Keep the runtime patched independently
+of the package. See the [October 2026 Node.js security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
 
 To try a local development build in another project, run `npm pack` here and
 install the resulting `.tgz` there with `npm install /path/to/package.tgz`.
