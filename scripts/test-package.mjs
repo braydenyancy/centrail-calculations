@@ -47,7 +47,7 @@ try {
     const consumer = join(temporary, consumerName);
     mkdirSync(join(consumer, "fixtures"), { recursive: true });
     writeFileSync(join(consumer, "package.json"), JSON.stringify({ name: consumerName.replace(" ", "-"), private: true, type: "module" }));
-    npm(["install", "--package-lock=false", tarball], consumer);
+    npm(["install", "--engine-strict", "--package-lock=false", tarball], consumer);
     const installed = join(consumer, "node_modules", "@centrail", "calculations");
     assert.equal(lstatSync(installed).isSymbolicLink(), false, "A linked checkout is not a packed installation");
     assert.deepEqual(readdirSync(join(consumer, "node_modules", "@centrail")), ["calculations"]);

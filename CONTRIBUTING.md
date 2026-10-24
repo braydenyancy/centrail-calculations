@@ -11,7 +11,9 @@ follow [SECURITY.md](SECURITY.md).
 
 ## Development
 
-Use a current Node.js 22 LTS release (at least 22.12) or Node.js 24 and npm. From a clean checkout:
+Use Node.js 24.22.1 (the `.node-version` default) or Node.js 22.23.4 and npm.
+Later patches within either major are supported. Local installs enforce the
+package runtime floor through `.npmrc`. From a clean checkout:
 
 ```sh
 npm ci
