@@ -1,6 +1,6 @@
 {
   "name": "@centrail/calculations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Deterministic, versioned AI usage pricing and environmental estimates with reviewable methodology.",
   "type": "module",
   "license": "Apache-2.0",

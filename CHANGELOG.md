@@ -9,6 +9,17 @@ here. Package versions and calculation identities are separate; see
 - Document the existing npm `0.1.0` publication, installation and verification
   receipt. No runtime or methodology change.
 
+## [0.2.0](https://github.com/braydenyancy/centrail-calculations/compare/v0.1.0...v0.2.0) (2026-10-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* supported Node.js versions are now ^22.23.4 || ^24.22.1. Earlier patch releases and untested majors no longer satisfy package engines.
+
+### Bug Fixes
+
+* require patched Node.js 22 and 24 runtimes ([#24](https://github.com/braydenyancy/centrail-calculations/issues/24)) ([1ca0549](https://github.com/braydenyancy/centrail-calculations/commit/1ca05497a1bacf2d7d608753930222820e31621b))
+
 ## 0.1.0 — 2026-10-11
 
 - Extract deterministic pricing, energy, document, proposal and catalog-observation
