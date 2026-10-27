@@ -5,7 +5,15 @@ default catalog and no root barrel export. The runtime does not include the
 repository's retained source snapshots or parameter artifacts; select and retain
 those explicitly in a consuming application.
 
-All subpaths are browser-safe ESM and retain synchronous return values.
+## Runtime and release compatibility
+
+This guide follows the source in this checkout. Use the README and declarations
+bundled with an installed package to establish that version's contract; repository
+`main` and development branches can contain unreleased APIs. Version `0.1.0` is
+Node-only and has no `createEnergyCalculator`. Do not infer browser support from
+its energy API names or install it expecting the prepared-calculator example below.
+
+In this checkout, all subpaths are browser-safe ESM and retain synchronous return values.
 The prepared calculator uses the browser-standard `structuredClone` API. Use a
 browser bundler or an import map resolving the package and `@noble/hashes`; no
 Node built-in or Buffer polyfills are needed. Direct replay still checks
@@ -21,6 +29,11 @@ also writes the executable browser bundle for a real-browser smoke check. This
 sandbox check proves runtime independence, not a browser rendering claim.
 
 ## Pricing
+
+The file-based examples in this guide run from the repository root after
+`npm ci` and `npm run build`. A package installation does not contain the
+`calculations/` evidence directory. Production consumers must retain and select
+their own reviewed artifacts.
 
 ```js
 import { readFileSync } from "node:fs";
@@ -50,7 +63,10 @@ console.log(result.usdExact, result.coverage, result.issues);
 
 This is a synthetic usage example against a **proposed**, incomplete catalog.
 Loading an artifact validates its structure and content hash; it does not approve
-its rates. Production callers choose a reviewed artifact explicitly.
+its rates. Production callers choose a reviewed artifact explicitly. This is a token-price
+estimate, not an invoice: there are no subscription, discount or tax inputs.
+Work attribution, productivity, savings and ROI require separate evidence and
+methods in the consuming product.
 
 `input`, `output`, `cacheRead` and `cacheCreation` are disjoint normalized counters.
 Do not pass an inclusive provider input total alongside its cached subset. The
@@ -87,7 +103,11 @@ Changing a method or regrouping events can change the result.
 
 `compileEnergyArtifact(parameterText)` validates the strict JSON-subset YAML and
 computes its content identity. `replayEnergy(artifact, tokens, model?)` accepts
-`input`, `output`, `cacheRead` and `cacheWrite` counts.
+`input`, `output`, `cacheRead` and `cacheWrite` counts. These buckets are disjoint.
+Energy's `cacheWrite` means **all cache-creation tokens**, including TTL classes.
+Map a normalized pricing event's `cacheCreation` to energy's `cacheWrite`, not
+pricing's generic `cacheWrite` subset. Do not add the TTL counters again or pass
+cached subsets alongside an inclusive provider input total.
 `replayEnergyFromTotal(artifact, totalTokens, model?, mix?)` uses the retained
 rounded `chat` or `coding` mixture; the default is `chat`.
 
@@ -97,8 +117,8 @@ repeated in the return value. The [energy example](../examples/energy.mjs) shows
 that envelope.
 
 The retained energy method sanitizes negative and nonfinite token values to zero
-for compatibility. This differs from pricing's rejection of malformed counts;
-validate input at your ingestion boundary. Unknown or omitted models use the
+for compatibility and accepts positive fractional counts. This differs from
+pricing's rejection of malformed counts; validate input at your ingestion boundary. Unknown or omitted models use the
 retained default factor; known matching is ordered and case-normalized. Bounds
 are scenarios, not confidence intervals. Carbon, water, training and embodied
 hardware impacts are outside this method.

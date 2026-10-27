@@ -70,8 +70,10 @@ regression evidence; it is not independent environmental validation.
 
 The root `calculations/pricing/METHOD.md` and `calculations/energy/METHOD.md` are
 inputs to retained proposal hashes. Their wording is part of review identity.
-Archive old proposal files unchanged; create a new proposal for an intentional
-method-document or parameter change. Do not alter old bytes and keep an old hash.
+Statements about consumer adoption in retained method documents describe their
+capture context, not current deployment state. Use the consuming product's own
+documentation to establish adoption. Archive old proposal files unchanged; create
+a new proposal for an intentional method-document or parameter change. Do not alter old bytes and keep an old hash.
 
 Some historical provenance fields contain relative source paths from the original
 implementation. Those are provenance labels, not dependencies on another checkout.

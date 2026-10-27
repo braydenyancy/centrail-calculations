@@ -1,13 +1,13 @@
 # Repository administration
 
 Workflows and review guidance live in Git. GitHub permissions, branch protections
-and npm publishing configuration are separate settings. The initial setup was
-performed with collaborator write access; the owner must apply and verify the
-settings below. These files describe desired settings, not proof they are enabled.
+and npm publishing configuration are separate settings. An owner or administrator
+must verify the settings below. These files describe desired settings, not proof
+they are enabled.
 
 ## Main branch and reviews
 
-After the first successful CI and CodeQL runs on `main`, the repository owner can
+For initial setup, after successful CI and CodeQL runs on `main`, the owner can
 apply the checked-in configuration from a checkout with GitHub CLI:
 
 ```sh

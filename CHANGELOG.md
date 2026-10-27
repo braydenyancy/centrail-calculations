@@ -4,11 +4,6 @@ Changes affecting behavior, methods, artifact formats or source coverage belong
 here. Package versions and calculation identities are separate; see
 [versioning](docs/versioning.md).
 
-## Unreleased
-
-- Document the existing npm `0.1.0` publication, installation and verification
-  receipt. No runtime or methodology change.
-
 ## 0.1.0 — 2026-10-11
 
 - Extract deterministic pricing, energy, document, proposal and catalog-observation

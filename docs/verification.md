@@ -1,10 +1,14 @@
-# Initial package verification
+# Historical initial package verification
+
+This is a historical record, not the current test matrix, dependency contract or
+release configuration. For development use [CONTRIBUTING.md](../CONTRIBUTING.md),
+[package scripts](../package.json) and the [CI workflow](../.github/workflows/ci.yml).
 
 2026-10-09. This receipt covers the standalone package, its retained evidence and
 the repository's verification commands. It does not establish adoption by a CLI
 or server, an accepted pricing catalog, npm publication or scientific measurement.
 
-`npm run check` passes on Node.js 22.23.1 and 24.21.0:
+At that revision, `npm run check` passed on Node.js 22.23.1 and 24.21.0:
 
 - 146 unit tests across five files, plus TypeScript checking and the ESM build.
 - All ten retained pricing/energy proposal files regenerate byte-for-byte;
@@ -19,14 +23,16 @@ or server, an accepted pricing catalog, npm publication or scientific measuremen
   tarball produced on the two tested Node versions has the same SHA-256.
 
 The [packed-package receipt](verification/initial-package.json) identifies those
-bytes and results. Reproduce it with `npm run test:package -- --out artifacts`.
-Hashes describe this initial artifact, not every future version. Unit tests and
+bytes and results. `npm run test:package` checks the current checkout; reproducing
+the initial bytes requires the recorded source and toolchain. Hashes describe this
+initial artifact, not every future version. Unit tests and
 fixed outputs demonstrate implementation behavior, not independent scientific
 accuracy or complete billing coverage.
 
 Local Actionlint validation passes for all workflows. Release guards reject tag
 and package-name mismatches, changed or multiple tarballs, and receipt/version
-mismatches. Publishing remains disabled until owner setup and release approval.
+mismatches. Publishing was disabled at this capture; current release requirements
+are in [releasing.md](releasing.md).
 
 Hosted platform results are recorded by [CI](https://github.com/braydenyancy/centrail-calculations/actions/workflows/ci.yml)
 and [CodeQL](https://github.com/braydenyancy/centrail-calculations/actions/workflows/codeql.yml).

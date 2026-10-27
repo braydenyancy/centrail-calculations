@@ -1,8 +1,14 @@
 # Retained calculations and evidence commands
 
 This directory keeps method documents, source evidence and immutable parameter
-proposals. It contains no active catalog pointer. Commands prepare proposals or
-replay a selected artifact; they cannot activate rates in a consuming application.
+proposals. It contains no active catalog pointer. Method documents and dated
+proposals are content-addressed historical evidence, not current integration or deployment
+status. For example, the energy document's original “no production caller” statement
+describes its extraction date; it is not a claim about later consumer adoption.
+Do not rewrite those bytes to update product status. Use [the API guide](../docs/api.md)
+for current integration contracts.
+
+Commands prepare proposals or replay a selected artifact; they cannot activate rates in a consuming application.
 
 The runtime implementation is in `src/`. These commands run from the repository
 root after `npm ci`. They are developer tools, not installed package executables.
