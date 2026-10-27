@@ -55,11 +55,9 @@ are reused; byte mismatches fail, and a stale stable release cannot replace a ne
 presence is checked; the verification does not independently validate its signature chain.
 
 The published 0.1.0 was verified against 94b9dbf and has no retrospective CI provenance.
-Its [publication receipt](verification/npm-0.1.0.md) remains authoritative; do not republish it.
+Its [publication identity](verification.md#published-010-compatibility) is retained; do not republish it.
 Package publication does not activate a pricing catalog, adopt a method in a consumer
 or rewrite history. Each consumer upgrades its dependency and policy explicitly.
 
-Rehearsals: [SDK and release-boundary receipt](verification/2026-10-12-release-automation.json),
-[generated PR checks](verification/2026-10-13-release-pr-checks.json).
 Platform references: [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/),
 [GitHub workflow triggering](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow).

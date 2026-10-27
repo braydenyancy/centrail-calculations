@@ -1,55 +1,29 @@
-# Historical initial package verification
+# Verification
 
-This is a historical record, not the current test matrix, dependency contract or
-release configuration. For development use [CONTRIBUTING.md](../CONTRIBUTING.md),
-[package scripts](../package.json) and the [CI workflow](../.github/workflows/ci.yml).
+Run `npm run check` after the setup in [CONTRIBUTING.md](../CONTRIBUTING.md).
+It checks types, unit fixtures, documentation links, byte-for-byte regeneration
+of retained artifacts, and packed CLI/server/browser consumers. The
+[CI workflow](../.github/workflows/ci.yml) owns the supported runtime/platform matrix.
+Use checks for the exact revision under review; old run reports are not evidence
+that a new build passes. Generated reports belong outside Git.
 
-2026-10-09. This receipt covers the standalone package, its retained evidence and
-the repository's verification commands. It does not establish adoption by a CLI
-or server, an accepted pricing catalog, npm publication or scientific measurement.
+For pricing changes, the optional [calculator differentials](verification/cost-comparisons.md)
+compare pinned external implementations against synthetic fixtures. Neither
+fixture agreement nor artifact reproducibility establishes scientific accuracy,
+complete capture, provider billing accuracy or consumer adoption.
 
-At that revision, `npm run check` passed on Node.js 22.23.1 and 24.21.0:
+## Published 0.1.0 compatibility
 
-- 146 unit tests across five files, plus TypeScript checking and the ESM build.
-- All ten retained pricing/energy proposal files regenerate byte-for-byte;
-  overwriting an existing proposal directory is refused.
-- Two clean consumers install the actual npm tarball offline without lifecycle
-  scripts. Each exercises all five exports, 96 energy assertions over 32 model
-  cases, tamper rejection and the distinct historical pricing-rounding methods.
-- Packed declarations typecheck without ambient Node types. The declarations
-  emitted by TypeScript 7.0.2 also pass a consumer check with TypeScript 5.9.3.
-- Both documented executable examples run against the installed package.
-- The package contains 14 allowlisted files and no runtime dependencies. The
-  tarball produced on the two tested Node versions has the same SHA-256.
+`npm run test:published` is an optional public-registry check of immutable version
+`0.1.0`, not the moving `latest` channel. It installs an isolated consumer without
+inherited credentials or lifecycle scripts, checks the tarball digest and lockfile
+integrity, and exercises installed behavior. It does not compare old package bytes
+to evolving development source. Native macOS/Windows execution of this optional
+registry check remains unverified.
 
-The [packed-package receipt](verification/initial-package.json) identifies those
-bytes and results. `npm run test:package` checks the current checkout; reproducing
-the initial bytes requires the recorded source and toolchain. Hashes describe this
-initial artifact, not every future version. Unit tests and
-fixed outputs demonstrate implementation behavior, not independent scientific
-accuracy or complete billing coverage.
-
-Local Actionlint validation passes for all workflows. Release guards reject tag
-and package-name mismatches, changed or multiple tarballs, and receipt/version
-mismatches. Publishing was disabled at this capture; current release requirements
-are in [releasing.md](releasing.md).
-
-Hosted platform results are recorded by [CI](https://github.com/braydenyancy/centrail-calculations/actions/workflows/ci.yml)
-and [CodeQL](https://github.com/braydenyancy/centrail-calculations/actions/workflows/codeql.yml).
-Use the run for the exact commit being reviewed. The local checks above do not
-substitute for the native Windows/macOS jobs or prove owner-only settings are enabled.
-
-## Document-parser security follow-up
-
-The first hosted CodeQL analysis identified potential polynomial backtracking in
-the method frontmatter parser. Literal delimiter searches replace that expression;
-13 added regressions bring the suite to 159 passing tests. All ten retained
-proposal files still regenerate byte-for-byte, and packed consumers pass.
-
-An independent comparison over 33,102 retained/generated cases found the same
-accepted metadata and body bytes and the same rejected inputs. A bounded local
-probe rejected a 7 MB malformed document in approximately 22 ms. That observation
-supports the structural removal of backtracking; it is not a general latency SLA.
-The initial package receipt above remains historical because the parser repair
-changes the package's code bytes. Hosted analysis and alert state must be checked
-for the exact follow-up commit.
+The pinned SHA-256 is
+`ee7c8f3e90a7f586e7e0cdf1e9916793d334522bdb0b0c19f38034dae930356e`,
+matching [source commit 94b9dbf](https://github.com/braydenyancy/centrail-calculations/commit/94b9dbf60507c8beab82a583101d3074a3dd2c16).
+This was a content comparison, not authenticated build provenance: no GitHub
+version tag or build attestation was available at verification. Never republish
+that version. New publications follow [the release workflow](releasing.md).

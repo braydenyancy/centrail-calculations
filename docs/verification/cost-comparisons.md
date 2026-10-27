@@ -71,10 +71,8 @@ Seven retained synthetic fixtures in `tests/fixtures/cost-comparisons.synthetic.
 writes, explicit zero rates, sub-microdollar rounding, missing cache rates and an
 unknown model. Five comparable cases must match Centrail's exact aggregate method
 within `1e-12` USD. The receipt includes all inputs, upstream revisions and outputs.
-The [October 12 executed receipt](cost-comparisons-2026-10-12.json) records the
-verified Linux/Node 24/Python 3.13 run; the
-[preparation receipt](cost-comparisons-preparation-2026-10-12.json) records the
-resolved external dependencies and their limits.
+Keep generated preparation and execution reports outside Git; rerun the suite
+for the revision under review.
 
 - Centrail's historical per-event method rounds `0.0000005` to `0.000001`;
   its aggregate method and both external calculators retain `0.0000005`.

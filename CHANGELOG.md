@@ -18,5 +18,5 @@ here. Package versions and calculation identities are separate; see
   searches; preserve accepted document bytes and reject malformed large inputs.
 
 The npm tarball matches source commit `94b9dbf`; see the
-[publication receipt](docs/verification/npm-0.1.0.md). No GitHub version tag or
+[publication identity](docs/verification.md#published-010-compatibility). No GitHub version tag or
 build-provenance attestation was available when this publication was verified.

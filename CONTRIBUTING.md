@@ -28,8 +28,8 @@ Use portable Node.js helpers for filesystem and process work.
 The package checks execute CLI, server and browser consumers with synthetic
 fixtures, including numerical compatibility and tamper rejection. Run the optional
 [calculator comparisons](docs/verification/cost-comparisons.md) when changing pricing
-behavior. Historical [bootstrap results](docs/verification.md) describe an earlier
-revision, not the current dependency set or test count.
+behavior. [Verification](docs/verification.md) explains these checks and the
+optional immutable-publication compatibility check.
 
 | Directory | Responsibility |
 | --- | --- |
