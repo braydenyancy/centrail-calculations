@@ -3,8 +3,10 @@
 Reproducible API token-price and energy estimates, with explicit methods,
 versioned parameters and reviewable source evidence.
 
-`@centrail/calculations` is a TypeScript library for Node.js 22.23.4+ or 24.22.1+ (within those majors). It
-provides ESM modules and type declarations, with no runtime dependencies. Callers
+`@centrail/calculations` is a TypeScript library for browsers and Node.js 22.23.4+ or 24.22.1+ (within those majors). It
+provides ESM modules and type declarations. Its only runtime dependency is
+[`@noble/hashes`](https://github.com/paulmillr/noble-hashes), used for synchronous
+SHA-256 artifact validation with identical UTF-8 hashes in both environments. Callers
 choose the exact method and parameter artifact; the library does not fetch rates,
 select a current catalog or collect usage data.
 
@@ -21,8 +23,11 @@ or server. Energy estimates preserve a historical method and its limitations.
 npm install --save-exact @centrail/calculations@0.1.0
 ```
 
-Use Node.js 22.23.4+ or 24.22.1+ (within those majors). Import one of the modules listed below; there is no
-root export. Supply an explicit reviewed parameter artifact.
+Use a modern browser with ES2022, `TextEncoder` and `structuredClone`, or Node.js 22.23.4+ / 24.22.1+
+(within those majors). Import one of the modules listed below; there is no
+root export. Supply an explicit reviewed parameter artifact. Browser support and
+prepared energy calculators apply to the next release; published 0.1.0 remains
+Node-only.
 
 ## Try it locally
 
@@ -42,7 +47,7 @@ do not read coding-tool history or send data anywhere. The pricing example shows
 why two one-token events can have different totals under retained rounding methods.
 
 `npm run check` checks types, runs the tests, regenerates retained artifacts and
-tests an installed package in an isolated consumer. CI runs the checks on Linux,
+tests packed CLI, server and browser consumers without Node polyfills. CI runs the checks on Linux,
 macOS and Windows with Node.js 22 and 24. Check the workflow results for a
 particular revision before relying on it. These security floors apply to this
 checkout and its next release; the already published 0.1.0 metadata is unchanged.
@@ -138,8 +143,10 @@ Verification covers distinct layers; agreement in one layer does not prove anoth
 Run the optional cost comparisons with `npm run prepare:cost-comparisons` once,
 then `npm run test:cost-comparisons` offline. See the
 [comparison scope and reproduction](docs/verification/cost-comparisons.md).
-`npm run test:published` separately verifies immutable public npm bytes and
-installed-consumer behavior; it requires network access.
+`npm run test:published` separately verifies the immutable public 0.1.0 bytes and
+installed-consumer behavior; it requires network access and does not compare that
+historical release with current source. New releases use the tested tarball and
+registry verifier described in the release pattern.
 
 Useful contributions include counterexamples, clearer assumptions, better source
 evidence, new methods and tests that expose numerical or coverage mistakes. Start

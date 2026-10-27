@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { createHash } from "node:crypto";
 import { canonicalJson, parseJsonStrict, readMethodDocument, sha256 } from "../src/documents.js";
 
 const metadata = { schemaVersion: 1, id: "test", revision: "v1", title: "Test", kind: "pricing", inputUnit: "tokens", outputUnit: "USD", assumptions: [], exclusions: [] };
 
 describe("retained calculation documents", () => {
+  it.each(["", "abc", "centrail\n", "é漢字🌎", "\ud800", "\udc00", "a".repeat(55), "a".repeat(56), "a".repeat(64), "a".repeat(100_000)])
+    ("preserves Node UTF-8 SHA-256 bytes for input %#", text => {
+      expect(sha256(text)).toBe(createHash("sha256").update(text, "utf8").digest("hex"));
+    });
+  it("matches the published SHA-256 abc vector", () => {
+    expect(sha256("abc")).toBe("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+  });
   it.each(['{"a":1,"a":2}', '{"a":1,"\\u0061":2}', '{"nested":{"x":0,"x":1}}'])
     ("rejects ambiguous keys: %s", text => expect(() => parseJsonStrict(text)).toThrow("Duplicate"));
   it.each(['[1,]', '{"a":1,}', '01', 'NaN', '1e999', 'true false', '"unterminated', '---\nx: 2'])

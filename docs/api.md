@@ -5,6 +5,21 @@ default catalog and no root barrel export. The runtime does not include the
 repository's retained source snapshots or parameter artifacts; select and retain
 those explicitly in a consuming application.
 
+All subpaths are browser-safe ESM and retain synchronous return values.
+The prepared calculator uses the browser-standard `structuredClone` API. Use a
+browser bundler or an import map resolving the package and `@noble/hashes`; no
+Node built-in or Buffer polyfills are needed. Direct replay still checks
+SHA-256 on every call. The shared hashing implementation preserves existing revision
+identities, including UTF-8 encoding of Unicode and lone surrogate strings.
+Compilation helpers accept strings and remain usable in either environment;
+reading files and selecting artifacts stay the caller's responsibility.
+
+`npm run test:package` installs the packed package, bundles all public exports for
+[the browser platform](https://esbuild.github.io/api/#platform), and executes energy
+and pricing fixtures plus tamper rejection without Node globals. `-- --out <dir>`
+also writes the executable browser bundle for a real-browser smoke check. This
+sandbox check proves runtime independence, not a browser rendering claim.
+
 ## Pricing
 
 ```js
@@ -106,3 +121,21 @@ hardware impacts are outside this method.
 
 See the [evidence commands](../calculations/README.md) for offline file operations
 and the [security boundaries](../SECURITY.md) when designing an ingestion service.
+
+## Repeated energy calculations
+
+For a dashboard aggregation, prepare once and reuse the calculator:
+
+```js
+import { createEnergyCalculator } from "@centrail/calculations/energy";
+const calculator = createEnergyCalculator(artifact);
+const row = calculator.replay(tokens, model);
+const illustration = calculator.fromTotal(totalTokens, model, "coding");
+```
+
+Creation copies the parameters into private plain data and validates that snapshot
+against the artifact revision. Later mutation of the caller's artifact or a returned
+range cannot change the calculator. Prepare a new calculator to adopt new parameters.
+The arithmetic and token sanitization match `replayEnergy` / `replayEnergyFromTotal`;
+those direct APIs keep validating the supplied artifact on each call. Preparation
+avoids parsing, schema validation and hashing for every row in a large aggregation.

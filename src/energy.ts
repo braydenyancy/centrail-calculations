@@ -105,8 +105,7 @@ function factorFor(parameters: EnergyParameters, model?: string): Factor {
 const nn = (value: number) => Number.isFinite(value) && value > 0 ? value : 0;
 
 /** Retained v2 arithmetic, including nonfinite/negative token sanitization and operation order. */
-export function replayEnergy(artifact: EnergyArtifact, tokens: EnergyTokens, model?: string): EnergyRange {
-  const p = parametersForReplay(artifact);
+function replayParameters(p: EnergyParameters, tokens: EnergyTokens, model?: string): EnergyRange {
   const factor = factorFor(p, model);
   const c = p.coefficients;
   const at = (end: keyof EnergyRange) => ((nn(tokens.input) * c.input[end] + nn(tokens.output) * c.output[end] + nn(tokens.cacheRead) * c.cacheRead[end] + nn(tokens.cacheWrite) * c.cacheWrite[end]) * factor[end]) / 1_000_000;
@@ -114,10 +113,35 @@ export function replayEnergy(artifact: EnergyArtifact, tokens: EnergyTokens, mod
 }
 
 /** Retains the rounded illustrative blended rates rather than deriving new rates from shares. */
-export function replayEnergyFromTotal(artifact: EnergyArtifact, totalTokens: number, model?: string, mix: EnergyMix = "chat"): EnergyRange {
-  const p = parametersForReplay(artifact);
+function replayTotalParameters(p: EnergyParameters, totalTokens: number, model?: string, mix: EnergyMix = "chat"): EnergyRange {
   const factor = factorFor(p, model);
   if (mix !== "chat" && mix !== "coding") throw new Error("Unsupported usage mix");
   const at = (end: keyof EnergyRange) => (nn(totalTokens) / 1_000_000) * p.blendedRates[mix][end] * factor[end];
   return { low: at("low"), value: at("value"), high: at("high") };
+}
+
+/** Validate the caller's current artifact on each invocation. */
+export function replayEnergy(artifact: EnergyArtifact, tokens: EnergyTokens, model?: string): EnergyRange {
+  return replayParameters(parametersForReplay(artifact), tokens, model);
+}
+
+export function replayEnergyFromTotal(artifact: EnergyArtifact, totalTokens: number, model?: string, mix: EnergyMix = "chat"): EnergyRange {
+  return replayTotalParameters(parametersForReplay(artifact), totalTokens, model, mix);
+}
+
+export type EnergyCalculator = Readonly<{
+  replay(tokens: EnergyTokens, model?: string): EnergyRange;
+  fromTotal(totalTokens: number, model?: string, mix?: EnergyMix): EnergyRange;
+}>;
+
+/** Validate one private snapshot for repeated calculations without rehashing each row. */
+export function createEnergyCalculator(artifact: EnergyArtifact): EnergyCalculator {
+  const parameters = parametersForReplay({
+    parameterRevision: artifact.parameterRevision,
+    parameters: structuredClone(artifact.parameters),
+  });
+  return Object.freeze({
+    replay: (tokens: EnergyTokens, model?: string) => replayParameters(parameters, tokens, model),
+    fromTotal: (totalTokens: number, model?: string, mix: EnergyMix = "chat") => replayTotalParameters(parameters, totalTokens, model, mix),
+  });
 }

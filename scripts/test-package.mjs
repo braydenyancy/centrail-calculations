@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
+import { runInNewContext } from "node:vm";
+import { build } from "esbuild";
 import { copyFileSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
@@ -30,7 +32,14 @@ const node = (args, cwd) => execFileSync(process.execPath, args, { cwd, env: env
 try {
   const packageInfo = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
   assert.equal(packageInfo.name, "@centrail/calculations");
-  for (const field of ["dependencies", "optionalDependencies", "peerDependencies"]) assert.equal(Object.keys(packageInfo[field] ?? {}).length, 0, field);
+  assert.deepEqual(packageInfo.dependencies, { "@noble/hashes": "2.4.0" });
+  for (const field of ["optionalDependencies", "peerDependencies"]) assert.equal(Object.keys(packageInfo[field] ?? {}).length, 0, field);
+  const hashPackage = join(root, "node_modules", "@noble", "hashes");
+  const hashInfo = JSON.parse(readFileSync(join(hashPackage, "package.json"), "utf8"));
+  assert.equal(hashInfo.version, packageInfo.dependencies["@noble/hashes"]);
+  assert.equal(Object.keys(hashInfo.dependencies ?? {}).length, 0);
+  const hashPack = JSON.parse(npm(["pack", "--json", "--pack-destination", temporary], hashPackage))[0];
+  const hashTarball = join(temporary, hashPack.filename);
   const subpaths = ["documents", "pricing", "energy", "workflow", "catalog-observations"];
   assert.deepEqual(Object.keys(packageInfo.exports).sort(), subpaths.map((name) => `./${name}`).sort());
   const packed = JSON.parse(npm(["pack", "--json", "--pack-destination", temporary], root));
@@ -43,11 +52,11 @@ try {
   ].sort(), "The tarball must contain only declared code, declarations and public notices");
   const tarball = join(temporary, pack.filename);
   const cases = [];
-  for (const consumerName of ["cli consumer", "server consumer"]) {
+  for (const consumerName of ["cli consumer", "server consumer", "browser consumer"]) {
     const consumer = join(temporary, consumerName);
     mkdirSync(join(consumer, "fixtures"), { recursive: true });
     writeFileSync(join(consumer, "package.json"), JSON.stringify({ name: consumerName.replace(" ", "-"), private: true, type: "module" }));
-    npm(["install", "--engine-strict", "--package-lock=false", tarball], consumer);
+    npm(["install", "--engine-strict", "--package-lock=false", tarball, hashTarball], consumer);
     const installed = join(consumer, "node_modules", "@centrail", "calculations");
     assert.equal(lstatSync(installed).isSymbolicLink(), false, "A linked checkout is not a packed installation");
     assert.deepEqual(readdirSync(join(consumer, "node_modules", "@centrail")), ["calculations"]);
@@ -73,7 +82,37 @@ try {
     const pricingExample = JSON.parse(node(["pricing-example.mjs", join(consumer, "fixtures", "pricing.json")], consumer));
     assert.equal(pricingExample.frozen.usdExact, "0.000002");
     assert.equal(pricingExample.live.usdExact, "0.000001");
-    cases.push({ consumer: consumerName, ...results, declarationsWithoutAmbientNodeTypes: true, documentedExamplesExecuted: true });
+    let browser;
+    if (consumerName === "browser consumer") {
+      copyFileSync(join(root, "tests", "fixtures", "browser-consumer.mjs"), join(consumer, "browser.mjs"));
+      const bundle = await build({
+        absWorkingDir: consumer, entryPoints: ["browser.mjs"], bundle: true,
+        platform: "browser", format: "iife", target: "es2022", write: false, metafile: true,
+      });
+      assert.equal(Object.values(bundle.metafile.outputs).flatMap((entry) => entry.imports).length, 0, "No external imports or Node polyfills");
+      const code = bundle.outputFiles[0].text;
+      // Node's structuredClone returns host-realm prototypes. Use null-prototype
+      // plain records at this test boundary so the sandbox's strict JSON-data
+      // checks see plain data, while retaining native numeric/clone semantics.
+      const cloneIntoSandbox = (value) => {
+        const clone = structuredClone(value);
+        const visit = (item) => {
+          if (!item || typeof item !== "object") return;
+          if (Object.getPrototypeOf(item) === Object.prototype) Object.setPrototypeOf(item, null);
+          for (const child of Object.values(item)) visit(child);
+        };
+        visit(clone);
+        return clone;
+      };
+      const context = { TextEncoder, structuredClone: cloneIntoSandbox };
+      runInNewContext(code, context, { timeout: 10_000 });
+      browser = JSON.parse(JSON.stringify(context.result));
+      assert.equal(browser.energyModels, 32);
+      assert.equal(browser.tamperChecks, 3);
+      assert.equal(browser.preparedSnapshot, true);
+      if (output) { mkdirSync(output, { recursive: true }); writeFileSync(join(output, "browser-consumer.js"), code); }
+    }
+    cases.push({ consumer: consumerName, ...results, declarationsWithoutAmbientNodeTypes: true, documentedExamplesExecuted: true, ...(browser ? { browser } : {}) });
   }
   const report = {
     name: pack.name, version: pack.version, filename: pack.filename, node: process.version,
