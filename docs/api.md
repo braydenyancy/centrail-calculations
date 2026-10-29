@@ -22,6 +22,11 @@ identities, including UTF-8 encoding of Unicode and lone surrogate strings.
 Compilation helpers accept strings and remain usable in either environment;
 reading files and selecting artifacts stay the caller's responsibility.
 
+Direct energy replay requires parameter objects with this runtime's `Object.prototype`
+or a null prototype. For ordinary objects from another JavaScript realm (such as
+an iframe), parse the serialized artifact in the receiving runtime before direct
+replay. The prepared energy calculator clones parameters before validation.
+
 `npm run test:package` installs the packed package, bundles all public exports for
 [the browser platform](https://esbuild.github.io/api/#platform), and executes energy
 and pricing fixtures plus tamper rejection without Node globals. `-- --out <dir>`
@@ -153,9 +158,10 @@ const row = calculator.replay(tokens, model);
 const illustration = calculator.fromTotal(totalTokens, model, "coding");
 ```
 
-Creation copies the parameters into private plain data and validates that snapshot
-against the artifact revision. Later mutation of the caller's artifact or a returned
-range cannot change the calculator. Prepare a new calculator to adopt new parameters.
+Creation uses `structuredClone` to make a private parameter snapshot, then validates
+its schema and hash against the artifact revision. Later mutation of the caller's
+artifact or a returned range cannot change the calculator. Prepare a new calculator
+to adopt new parameters.
 The arithmetic and token sanitization match `replayEnergy` / `replayEnergyFromTotal`;
 those direct APIs keep validating the supplied artifact on each call. Preparation
 avoids parsing, schema validation and hashing for every row in a large aggregation.
