@@ -1,5 +1,5 @@
 import { canonicalJson, readMethodDocument, type MethodMetadata } from "@centrail/calculations/documents";
-import { compileEnergyArtifact, replayEnergy, type EnergyTokens, type EnergyRange } from "@centrail/calculations/energy";
+import { compileEnergyArtifact, createEnergyCalculator, replayEnergy, type EnergyTokens, type EnergyRange } from "@centrail/calculations/energy";
 import { loadPricingArtifact, replayPricing, type PricingEvent, type PricingReplay } from "@centrail/calculations/pricing";
 import { proposePricing, recordPricingAcceptance, type PricingProposal } from "@centrail/calculations/workflow";
 import { observeCatalog, type CatalogKind } from "@centrail/calculations/catalog-observations";
@@ -11,7 +11,9 @@ export function typedConsumer(bytes: string, method: string, events: PricingEven
   const replay: PricingReplay = replayPricing(pricing, "token-buckets-v3", events);
   const proposal: PricingProposal = proposePricing(pricing, method);
   const tokens: EnergyTokens = { input: 1, output: 2, cacheRead: 3, cacheWrite: 4 };
-  const range: EnergyRange = replayEnergy(compileEnergyArtifact(bytes), tokens);
+  const artifact = compileEnergyArtifact(bytes);
+  const range: EnergyRange = replayEnergy(artifact, tokens);
+  const prepared: EnergyRange = createEnergyCalculator(artifact).replay(tokens);
   const kind: CatalogKind = "models-dev";
-  return { metadata, replay, range, proposal: canonicalJson(proposal), kind, recordPricingAcceptance, observeCatalog };
+  return { metadata, replay, range, prepared, proposal: canonicalJson(proposal), kind, recordPricingAcceptance, observeCatalog };
 }

@@ -1,4 +1,5 @@
-import { createHash } from "node:crypto";
+import { sha256 as hash } from "@noble/hashes/sha2.js";
+import { bytesToHex, utf8ToBytes } from "@noble/hashes/utils.js";
 
 // The initial parameter-file grammar is the JSON subset of YAML 1.2. Reject
 // duplicate keys before materializing objects and preserve decimal source text.
@@ -90,7 +91,7 @@ export function canonicalJson(value: unknown): string {
 }
 
 export function sha256(text: string): string {
-  return createHash("sha256").update(text, "utf8").digest("hex");
+  return bytesToHex(hash(utf8ToBytes(text)));
 }
 
 export type MethodMetadata = {

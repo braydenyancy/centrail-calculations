@@ -42,7 +42,6 @@ const filesUnder = (directory) => readdirSync(directory, { withFileTypes: true }
 });
 
 try {
-  run([join(root, "scripts", "build.mjs")], root);
   const fetchedAt = new Date().toISOString();
   const metadata = JSON.parse(await fetchBytes(`${registry}/@centrail%2fcalculations/${version}`));
   assert.equal(metadata.name, name);
@@ -70,18 +69,13 @@ try {
   const subpaths = ["documents", "pricing", "energy", "workflow", "catalog-observations"];
   const expectedFiles = [...subpaths.flatMap((subpath) => [`dist/${subpath}.js`, `dist/${subpath}.d.ts`]), "package.json", "README.md", "LICENSE", "NOTICE"].sort();
   assert.deepEqual(filesUnder(installed).map((path) => relative(installed, path).split(/[/\\]/).join("/")).sort(), expectedFiles);
-  const contentMatches = [];
-  for (const file of expectedFiles.filter((file) => !["README.md", "package.json"].includes(file))) {
-    assert.deepEqual(readFileSync(join(installed, file)), readFileSync(join(root, file)), `Published/current content mismatch: ${file}`);
-    contentMatches.push(file);
-  }
+  // The fixed tarball digest is the historical oracle. Current source is allowed
+  // to evolve; comparing it to 0.1.0 would make this check fail after every release.
   const publishedPackage = JSON.parse(readFileSync(join(installed, "package.json"), "utf8"));
-  const currentPackage = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-  const scriptsMatch = JSON.stringify(publishedPackage.scripts) === JSON.stringify(currentPackage.scripts);
-  delete publishedPackage.scripts;
-  delete currentPackage.scripts;
-  assert.deepEqual(publishedPackage, currentPackage, "Published package contract changed beyond development scripts");
-  const readmeMatches = readFileSync(join(installed, "README.md")).equals(readFileSync(join(root, "README.md")));
+  assert.equal(publishedPackage.name, name);
+  assert.equal(publishedPackage.version, version);
+  assert.equal(Object.keys(publishedPackage.dependencies ?? {}).length, 0);
+  assert.deepEqual(Object.keys(publishedPackage.exports).sort(), subpaths.map((subpath) => `./${subpath}`).sort());
   for (const [from, to] of [
     ["energy/proposal-2026-10-08/artifact.json", "energy.json"], ["energy/parameters.v1.yaml", "parameters.v1.yaml"],
     ["energy/fixtures/legacy.v2.json", "legacy.v2.json"], ["pricing/proposal-2026-10-08/artifact.json", "pricing.json"], ["pricing/METHOD.md", "pricing-METHOD.md"],
@@ -99,8 +93,7 @@ try {
   const report = {
     schemaVersion: 1, fetchedAt, completedAt: new Date().toISOString(), name, version, node: process.version, registry,
     checksums, tarball: metadata.dist.tarball, verifiedRuntimeSource: "94b9dbf60507c8beab82a583101d3074a3dd2c16",
-    contentMatches, packageContractMatches: true, developmentScriptsMatch: scriptsMatch,
-    documentation: { readmeMatches, assessment: readmeMatches ? "README matches" : "README changed after publication; runtime, declarations and package contract match" },
+    scope: "Immutable historical 0.1.0 bytes and public behavior; not a comparison with current source",
     installedIntegrityVerified: true, runtimeDependencyCount: 0, contract, examples,
     provenance: { npmGitHead: metadata.gitHead ?? null, attestations: metadata.dist.attestations ?? null, assessment: "Content verification does not establish CI publication provenance or production adoption." },
   };

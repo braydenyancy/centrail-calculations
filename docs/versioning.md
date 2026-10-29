@@ -16,8 +16,7 @@ was reviewed. Hashes do not establish author identity or source accuracy.
 
 ## Package compatibility
 
-The initial package version `0.1.0` is published. During
-`0.x`, minor versions may introduce API changes; document them in the changelog
+During `0.x`, minor versions may introduce API changes; document them in the changelog
 and pin exact package versions in consumers that require controlled adoption.
 Patch versions should remain API-compatible. Raising the supported Node.js floor
 is a package compatibility change even when calculation results stay identical;

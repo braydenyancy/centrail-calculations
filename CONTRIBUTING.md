@@ -11,22 +11,19 @@ follow [SECURITY.md](SECURITY.md).
 
 ## Development
 
-Use Node.js 24.22.1 (the `.node-version` default) or Node.js 22.23.4 and npm.
-Later patches within either major are supported. Local installs enforce the
-package runtime floor through `.npmrc`. From a clean checkout:
+Use the development Node version in [`.node-version`](.node-version) and npm.
+Supported Node ranges are declared in [`package.json`](package.json); `.npmrc`
+enforces that runtime floor for local installs. From a clean checkout:
 
 ```sh
 npm ci
 npm run check
 ```
 
-Individual commands are `npm run typecheck`, `npm test`, `npm run build`,
-`npm run test:artifacts` and `npm run test:package`. The package test builds and
-installs a real tarball into an isolated consumer. Do not rely on a sibling app
-checkout, a globally installed package or unpublished files to make a test pass.
-Use portable Node.js helpers for filesystem and process work.
-The [initial verification receipt](docs/verification.md) records what the bootstrap
-checks demonstrate and where their evidence stops.
+[Verification](docs/verification.md) describes the checks, packed-consumer isolation
+and optional comparisons. Individual commands are declared in
+[`package.json`](package.json). Use portable Node.js helpers for filesystem and
+process work.
 
 | Directory | Responsibility |
 | --- | --- |

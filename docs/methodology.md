@@ -48,13 +48,9 @@ still controls who may accept and activate it.
 ## Current evidence boundaries
 
 The [pricing method](../calculations/pricing/METHOD.md) covers a bounded direct API
-text-token contract. Its initial retained proposal has 21 exact entries and 4,482
-exclusions, including 102 direct-provider entries with unsupported dimensions.
-Other exclusions cover providers, modes and non-direct identities outside scope.
-It is not a replacement
-for an invoice, a complete model catalog or a statement of present provider rates.
-The [generated methodology](../calculations/pricing/proposal-2026-10-08/methodology.md)
-records the actual source pin, candidate coverage and exclusions.
+text-token contract. The [generated methodology](../calculations/pricing/proposal-2026-10-08/methodology.md)
+records the retained source pin, candidate coverage and exclusions. It is not a
+complete model catalog or a statement of present provider rates.
 
 The [energy method](../calculations/energy/METHOD.md) preserves historical
 token-to-energy assumptions and their original citations. Price ratios proxy
@@ -63,15 +59,17 @@ The initial extraction does not select new environmental science. Critiques and
 replacement-method proposals should address those assumptions directly.
 
 The [legacy fixture explanation](../calculations/energy/fixtures/METHOD.md)
-describes 32 synthetic model cases. Compatibility with those cases is useful
+describes the synthetic model cases. Compatibility with those cases is useful
 regression evidence; it is not independent environmental validation.
 
 ## Editing retained documents
 
 The root `calculations/pricing/METHOD.md` and `calculations/energy/METHOD.md` are
 inputs to retained proposal hashes. Their wording is part of review identity.
-Archive old proposal files unchanged; create a new proposal for an intentional
-method-document or parameter change. Do not alter old bytes and keep an old hash.
+Statements about consumer adoption in retained method documents describe their
+capture context, not current deployment state. Use the consuming product's own
+documentation to establish adoption. Archive old proposal files unchanged; create
+a new proposal for an intentional method-document or parameter change. Do not alter old bytes and keep an old hash.
 
 Some historical provenance fields contain relative source paths from the original
 implementation. Those are provenance labels, not dependencies on another checkout.

@@ -11,6 +11,7 @@ license and notice.
 | `litellm.synthetic.json` | Hand-written LiteLLM-shaped records for importer tests: three supported identities, a missing mode and an unsupported region. Names, dates and rates are test values, not provider pricing claims. |
 | `cost-comparisons.synthetic.json` | Seven invented shared rates/usage cases for actual LiteLLM calculator and isolated Langfuse method differentials. Includes explicit missing-rate and unknown-model differences; no provider price claims. |
 | `energy-legacy-boundaries.json` | Eight synthetic boundary inputs evaluated with historical footprint method v2 at the recorded source revision. Fixed results preserve sanitization, floating-point operation order and ordered model matching. |
+| `browser-consumer.mjs` | Packed browser bundle fixture covering retained energy results, pricing rounding and tamper rejection without Node globals. |
 | `package-consumer.mjs` | Executable synthetic usage in an isolated installation of the packed library. Verifies exported runtime behavior without a sibling application checkout. |
 | `package-consumer.mts` | TypeScript consumer of package declarations, checked independently of repository-only types. |
 

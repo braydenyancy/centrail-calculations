@@ -17,10 +17,12 @@ or methodology issue form.
 
 ## Supported versions
 
-The latest stable release is `0.1.0`, published on October 11, 2026. Report
-vulnerabilities affecting that release through the channel above. Security fixes
-target the current development branch and are delivered in a new version;
-published package contents are not replaced. There is no promised backport
+Report vulnerabilities affecting the latest stable release through the channel
+above. Identify the installed version, not just a branch name; consult
+[npm](https://www.npmjs.com/package/@centrail/calculations) and
+[release history](https://github.com/braydenyancy/centrail-calculations/releases)
+for published versions. Security fixes target the current development branch and
+are delivered in a new version; published package contents are not replaced. There is no promised backport
 schedule for older patch versions or prereleases, including the bootstrap
 `0.0.0-stage` version.
 

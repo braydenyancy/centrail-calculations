@@ -1,13 +1,13 @@
 # Repository administration
 
 Workflows and review guidance live in Git. GitHub permissions, branch protections
-and npm publishing configuration are separate settings. The initial setup was
-performed with collaborator write access; the owner must apply and verify the
-settings below. These files describe desired settings, not proof they are enabled.
+and npm publishing configuration are separate settings. An owner or administrator
+must verify the settings below. These files describe desired settings, not proof
+they are enabled.
 
 ## Main branch and reviews
 
-After the first successful CI and CodeQL runs on `main`, the repository owner can
+For initial setup, after successful CI and CodeQL runs on `main`, the owner can
 apply the checked-in configuration from a checkout with GitHub CLI:
 
 ```sh
@@ -18,11 +18,11 @@ gh api --method POST repos/braydenyancy/centrail-calculations/rulesets --input .
 The ruleset requires current checks, one approving code-owner review, review
 of the latest push by another person and resolved conversations. It dismisses
 stale approvals and prevents force pushes/deletion, with no administrator bypass.
-Both named maintainers in [CODEOWNERS](../.github/CODEOWNERS) must retain write
-access for ownership matching. Squash merges produce the required linear history.
+The maintainers in [CODEOWNERS](../.github/CODEOWNERS) must retain write access
+for ownership matching. Squash merges produce the required linear history.
 
-`CI passed` is a stable aggregate: every Node.js 22/24 job on Ubuntu, macOS and
-Windows must pass. A separate native code-scanning rule requires CodeQL results
+`CI passed` requires every job in the [CI matrix](../.github/workflows/ci.yml)
+to pass. A separate native code-scanning rule requires CodeQL results
 and blocks introduced high/critical security findings and error-level findings.
 A green CodeQL workflow only proves analysis completed; it does not prove there
 are no findings. This rule covers pull-request-introduced alert locations, not a
