@@ -4,6 +4,9 @@ Run `npm run check` after the setup in [CONTRIBUTING.md](../CONTRIBUTING.md).
 It checks types, unit fixtures, documentation links, byte-for-byte regeneration
 of retained artifacts, and packed CLI/server/browser consumers. The
 [CI workflow](../.github/workflows/ci.yml) owns the supported runtime/platform matrix.
+The package check builds and installs a real tarball into an isolated consumer,
+then exercises numerical compatibility and tamper rejection with synthetic fixtures.
+Do not substitute a sibling checkout, global package or unpublished files.
 Use checks for the exact revision under review; old run reports are not evidence
 that a new build passes. Generated reports belong outside Git.
 

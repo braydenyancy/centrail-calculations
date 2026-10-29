@@ -18,11 +18,11 @@ gh api --method POST repos/braydenyancy/centrail-calculations/rulesets --input .
 The ruleset requires current checks, one approving code-owner review, review
 of the latest push by another person and resolved conversations. It dismisses
 stale approvals and prevents force pushes/deletion, with no administrator bypass.
-Both named maintainers in [CODEOWNERS](../.github/CODEOWNERS) must retain write
-access for ownership matching. Squash merges produce the required linear history.
+The maintainers in [CODEOWNERS](../.github/CODEOWNERS) must retain write access
+for ownership matching. Squash merges produce the required linear history.
 
-`CI passed` is a stable aggregate: every Node.js 22/24 job on Ubuntu, macOS and
-Windows must pass. A separate native code-scanning rule requires CodeQL results
+`CI passed` requires every job in the [CI matrix](../.github/workflows/ci.yml)
+to pass. A separate native code-scanning rule requires CodeQL results
 and blocks introduced high/critical security findings and error-level findings.
 A green CodeQL workflow only proves analysis completed; it does not prove there
 are no findings. This rule covers pull-request-introduced alert locations, not a

@@ -1,12 +1,9 @@
 # Retained calculations and evidence commands
 
 This directory keeps method documents, source evidence and immutable parameter
-proposals. It contains no active catalog pointer. Method documents and dated
-proposals are content-addressed historical evidence, not current integration or deployment
-status. For example, the energy document's original “no production caller” statement
-describes its extraction date; it is not a claim about later consumer adoption.
-Do not rewrite those bytes to update product status. Use [the API guide](../docs/api.md)
-for current integration contracts.
+proposals. It contains no active catalog pointer. See [editing retained documents](../docs/methodology.md#editing-retained-documents)
+for preservation rules and [the API guide](../docs/api.md) for current integration
+contracts.
 
 Commands prepare proposals or replay a selected artifact; they cannot activate rates in a consuming application.
 
@@ -126,6 +123,3 @@ Acceptance binds a review reference, explicit timestamp and exact proposal hash;
 unresolved comparisons prevent it. The function does not authenticate reviewers
 or update a consumer's chosen catalog. Follow the
 [methodology review guide](../docs/methodology.md).
-
-Retained method documents and proposal files are content-addressed evidence.
-Create new proposals for changes; do not rewrite historical files in place.

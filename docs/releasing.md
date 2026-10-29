@@ -12,9 +12,8 @@ starts CI and CodeQL at the release branch and publication at the tag. A branch 
 
 ## Owner setup
 
-- GitHub Settings → Actions → General: allow Actions to create PRs. GitHub's
-  combined checkbox also mentions approval; the workflow does not approve PRs.
-  Keep human review and `CI passed` required on `main`.
+- Apply the [repository settings](repository-settings.md), including workflow PR
+  creation and main-branch review/check requirements.
 - Settings → Environments → `npm`: required reviewer, **Prevent self-review**,
   selected deployment **Tag** rule `v*`. Remove the old `v*` **Branch** rule.
 - Protect published tags against updates/deletion while permitting intended
@@ -29,12 +28,11 @@ starts CI and CodeQL at the release branch and publication at the tag. A branch 
 Owner settings are external configuration; a merged workflow does not apply them.
 Verify live settings before publishing; historical setup receipts are not proof
 that those settings still apply.
-[Repository settings](repository-settings.md) covers main/CodeQL protection.
 
 ## Each release
 
 1. Review the version/changelog and green checks for the [CI runtime matrix](../.github/workflows/ci.yml).
-   `npm run check` verifies types, tests, build, retained artifacts and packed consumers.
+   Run the [verification checks](verification.md) for the release revision.
 2. Merge the release PR; preparation creates the immutable tag and starts tag CI.
 3. Approve the `npm` environment for that intended tag. Read-only preparation tests
    the package; the OIDC publisher downloads the same tested tarball and checks its
@@ -54,8 +52,8 @@ are reused; byte mismatches fail, and a stale stable release cannot replace a ne
 `latest`. Never republish a version or move a published tag. Provenance metadata
 presence is checked; the verification does not independently validate its signature chain.
 
-The published 0.1.0 was verified against 94b9dbf and has no retrospective CI provenance.
-Its [publication identity](verification.md#published-010-compatibility) is retained; do not republish it.
+See [published 0.1.0 compatibility](verification.md#published-010-compatibility)
+for that version’s retained identity and provenance limitations.
 Package publication does not activate a pricing catalog, adopt a method in a consumer
 or rewrite history. Each consumer upgrades its dependency and policy explicitly.
 

@@ -20,16 +20,10 @@ npm ci
 npm run check
 ```
 
-Individual commands are `npm run typecheck`, `npm test`, `npm run build`,
-`npm run test:artifacts` and `npm run test:package`. The package test builds and
-installs a real tarball into an isolated consumer. Do not rely on a sibling app
-checkout, a globally installed package or unpublished files to make a test pass.
-Use portable Node.js helpers for filesystem and process work.
-The package checks execute CLI, server and browser consumers with synthetic
-fixtures, including numerical compatibility and tamper rejection. Run the optional
-[calculator comparisons](docs/verification/cost-comparisons.md) when changing pricing
-behavior. [Verification](docs/verification.md) explains these checks and the
-optional immutable-publication compatibility check.
+[Verification](docs/verification.md) describes the checks, packed-consumer isolation
+and optional comparisons. Individual commands are declared in
+[`package.json`](package.json). Use portable Node.js helpers for filesystem and
+process work.
 
 | Directory | Responsibility |
 | --- | --- |
